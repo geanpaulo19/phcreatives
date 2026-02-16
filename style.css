@@ -86,7 +86,9 @@ nav {
 #search {
     background: var(--card-bg);
     border: 1px solid var(--border);
-    padding: 18px 20px 18px 55px;
+    height: 56px;
+    line-height: 56px;
+    padding: 0 20px 0 55px;
     border-radius: 20px;
     color: white;
     width: 100%;
@@ -94,6 +96,8 @@ nav {
     font-size: 1rem;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    display: block;
+    -webkit-appearance: none;
 }
 
 #search:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
@@ -462,17 +466,16 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
     
     /* MOBILE SEARCH CURSOR FIX */
     .search-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: block;
+        width: 100%;
     }
 
     #search {
-        padding: 16px 20px 16px 50px; 
-        font-size: 16px; /* Prevents auto-zoom/cursor jumps on iOS */
-        line-height: normal; /* Fixes vertical cursor height */
-        height: auto;
-        -webkit-appearance: none; /* Removes shadow/border defaults */
+        height: 52px;
+        line-height: 52px;
+        padding: 0 20px 0 50px; 
+        font-size: 16px; 
+        -webkit-appearance: none; 
     }
 
     .search-icon {
