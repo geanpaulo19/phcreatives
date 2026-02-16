@@ -178,11 +178,26 @@ document.addEventListener('DOMContentLoaded', initializeGallery);
 // --- MODAL LOGIC ---
 const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
+const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
 const closeModalBtn = document.querySelector(".close-modal");
 
-if (openModalBtn) openModalBtn.onclick = () => modal.style.display = "flex";
-if (closeModalBtn) closeModalBtn.onclick = () => modal.style.display = "none";
+// Helper functions for better readability
+const openModal = () => {
+    if (modal) modal.style.display = "flex";
+};
 
+const closeModal = () => {
+    if (modal) modal.style.display = "none";
+};
+
+// Bind events with safety checks
+if (openModalBtn) openModalBtn.onclick = openModal;
+if (ctaOpenModalBtn) ctaOpenModalBtn.onclick = openModal;
+if (closeModalBtn) closeModalBtn.onclick = closeModal;
+
+// Close when clicking outside the modal content
 window.onclick = (event) => {
-    if (event.target == modal) modal.style.display = "none";
-}
+    if (event.target === modal) {
+        closeModal();
+    }
+};
