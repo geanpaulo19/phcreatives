@@ -8,8 +8,7 @@ const counter = document.getElementById('counter');
 let displayedCreatives = [];
 
 /**
- * FEATURE: Automated Expiry Logic (Fixed)
- * Normalizes both dates to local midnight to ensure accurate day-by-day expiration.
+ * FEATURE: Automated Expiry Logic
  */
 function isUserPro(person) {
     if (!person.expiryDate) return false;
@@ -62,7 +61,12 @@ function renderCards(data) {
     counter.innerText = `Showcasing ${data.length} curated Filipino creatives`;
 
     if (data.length === 0) {
-        directory.innerHTML = `<div class="no-results">No creatives found matching that search.</div>`;
+        // Centered empty state that works with the grid-column CSS
+        directory.innerHTML = `
+            <div class="no-results">
+                <p>No creatives found matching that search.</p>
+                <button onclick="window.clearSearch()" class="filter-btn" style="margin-top: 20px; border-color: var(--accent); color: var(--accent);">Clear Search</button>
+            </div>`;
         return;
     }
 
@@ -73,14 +77,12 @@ function renderCards(data) {
             `<span class="badge" style="${getSkillStyle(skill)}">${skill}</span>`
         ).join('');
 
-        // Standard Social Links
         const linksHTML = Object.entries(person.links)
             .filter(([platform, url]) => url && url.trim() !== "")
             .map(([platform, url]) => 
                 `<a href="${url}" target="_blank" class="social-link-item">${platform}</a>`
             ).join('');
 
-        // Universal Email Link
         const emailLinkHTML = person.email ? 
             `<a href="mailto:${person.email}" class="social-link-item">email</a>` : '';
 
@@ -135,6 +137,14 @@ function filterGallery() {
 
     renderCards(filtered);
 }
+
+// --- HELPER: Clear Search ---
+window.clearSearch = () => {
+    searchInput.value = '';
+    filterBtns.forEach(b => b.classList.remove('active'));
+    document.querySelector('[data-filter="all"]').classList.add('active');
+    filterGallery();
+};
 
 // --- EVENT LISTENERS ---
 
