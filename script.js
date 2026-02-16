@@ -209,11 +209,14 @@ function initializeGallery() {
 function initStickyObserver() {
     const filterContainer = document.querySelector('.filter-container');
     
-    // threshold: [1] means trigger when 100% of the element is visible
-    // We check if it's NOT fully intersecting to see if it has started "sticking"
+    // Using a threshold of 1 and checking intersectionRatio ensures 
+    // it triggers as soon as the element is "stuck"
     const observer = new IntersectionObserver(
         ([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1),
-        { threshold: [1] }
+        { 
+            threshold: [1],
+            rootMargin: '-1px 0px 0px 0px' // Slightly offset to trigger the state immediately
+        }
     );
 
     if (filterContainer) {
