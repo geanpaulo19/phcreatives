@@ -1,6 +1,6 @@
 # 🌌 PHCREATIVES
 
-**phcreatives** is a premium, dark-themed discovery platform designed to showcase top-tier Filipino creative talent. The interface balances high-end aesthetics with functional performance, featuring a mobile-first responsive grid and smooth micro-interactions.
+**PHCREATIVES** is a premium, dark-themed discovery platform designed to showcase top-tier Filipino creative talent. The interface balances high-end aesthetics with functional performance, featuring a mobile-first responsive grid and smooth micro-interactions.
 
 ![License](https://img.shields.io/badge/license-MIT-6366f1)
 ![Community](https://img.shields.io/badge/community-Philippines-red)
