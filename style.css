@@ -606,3 +606,126 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
         max-width: 300px; 
     }
 }
+
+/* --- SIDE DRAWER (Desktop) / BOTTOM SHEET (Mobile) --- */
+.drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3000;
+    visibility: hidden;
+    transition: visibility 0.4s;
+    display: flex;
+    justify-content: flex-end; /* Desktop: Drawer sticks to the right */
+}
+
+.drawer.is-open {
+    visibility: visible;
+}
+
+.drawer-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.drawer.is-open .drawer-overlay {
+    opacity: 1;
+}
+
+.drawer-content {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    background: #111318;
+    border-left: 1px solid var(--border);
+    padding: 4rem 2rem 2rem;
+    overflow-y: auto;
+    
+    /* Desktop Animation: Slide from right */
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawer.is-open .drawer-content {
+    transform: translateX(0);
+}
+
+.close-drawer {
+    position: absolute;
+    top: 20px;
+    right: 20px; /* Moved to right for better thumb reach */
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 10;
+    line-height: 1;
+}
+
+/* --- MOBILE ADAPTATION --- */
+@media (max-width: 768px) {
+    .drawer {
+        align-items: flex-end; /* Mobile: Content sticks to bottom */
+    }
+
+    .drawer-content {
+        max-width: 100%;
+        height: 85vh; /* Don't cover the full screen to maintain context */
+        border-left: none;
+        border-top: 1px solid var(--border);
+        border-radius: 32px 32px 0 0; /* Rounded top corners for "Sheet" look */
+        
+        /* Mobile Animation: Slide from bottom */
+        transform: translateY(100%);
+        padding: 3.5rem 1.5rem 2rem;
+    }
+
+    .drawer.is-open .drawer-content {
+        transform: translateY(0);
+        transform: translateX(0); /* Reset desktop transform */
+    }
+
+    /* Grab Handle for Mobile */
+    .drawer-content::before {
+        content: '';
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: var(--border);
+        border-radius: 10px;
+    }
+}
+
+/* Drawer Content Styling */
+.drawer-header { text-align: center; margin-bottom: 2rem; }
+.drawer-img { 
+    width: 120px; height: 120px; 
+    border-radius: 24px; 
+    margin-bottom: 1.5rem; 
+    border: 1px solid var(--accent);
+    object-fit: cover;
+}
+.drawer-name { font-family: 'Outfit'; font-size: 1.8rem; margin-bottom: 0.5rem; }
+.drawer-longbio { color: var(--text-dim); line-height: 1.8; font-size: 1rem; margin-bottom: 2.5rem; }
+
+.drawer-section-title { 
+    font-size: 0.65rem; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    color: var(--accent); 
+    margin-bottom: 1.2rem; 
+    font-weight: 800;
+    opacity: 0.8;
+}
