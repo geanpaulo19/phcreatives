@@ -61,7 +61,6 @@ function renderCards(data) {
     counter.innerText = `Showcasing ${data.length} curated Filipino creatives`;
 
     if (data.length === 0) {
-        // Centered empty state that works with the grid-column CSS
         directory.innerHTML = `
             <div class="no-results">
                 <p>No creatives found matching that search.</p>
@@ -72,6 +71,7 @@ function renderCards(data) {
 
     directory.innerHTML = data.map((person, index) => {
         const isPro = isUserPro(person);
+        const hasLongBio = isPro && person.longBio;
 
         const badgesHTML = person.skills.map(skill => 
             `<span class="badge" style="${getSkillStyle(skill)}">${skill}</span>`
@@ -100,7 +100,15 @@ function renderCards(data) {
                     ${badgesHTML}
                 </div>
                 <h3>${person.name} ${verifiedBadge}</h3>
-                <p class="bio">${person.bio}</p>
+                
+                <div class="bio-wrapper">
+                    <p class="bio">
+                        ${person.bio}
+                        ${hasLongBio ? `<span class="more-text" id="more-${index}">${person.longBio}</span>` : ''}
+                    </p>
+                    ${hasLongBio ? `<button class="read-more-btn" onclick="toggleBio(${index}, this)">Read More</button>` : ''}
+                </div>
+
                 ${hireButton}
                 <div class="social-links">
                     ${emailLinkHTML}
@@ -110,6 +118,17 @@ function renderCards(data) {
         `;
     }).join('');
 }
+
+/**
+ * FEATURE: Toggle Expanded Bio
+ */
+window.toggleBio = (index, btn) => {
+    const moreText = document.getElementById(`more-${index}`);
+    if (moreText) {
+        const isExpanded = moreText.classList.toggle('visible');
+        btn.innerText = isExpanded ? "Read Less" : "Read More";
+    }
+};
 
 /**
  * Filters the data
@@ -123,6 +142,7 @@ function filterGallery() {
         const matchesSearch = 
             person.name.toLowerCase().includes(query) || 
             person.bio.toLowerCase().includes(query) ||
+            (person.longBio && person.longBio.toLowerCase().includes(query)) ||
             person.skills.some(s => s.toLowerCase().includes(query));
                               
         let matchesFilter = true;
@@ -181,23 +201,13 @@ const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
 const closeModalBtn = document.querySelector(".close-modal");
 
-// Helper functions for better readability
-const openModal = () => {
-    if (modal) modal.style.display = "flex";
-};
+const openModal = () => { if (modal) modal.style.display = "flex"; };
+const closeModal = () => { if (modal) modal.style.display = "none"; };
 
-const closeModal = () => {
-    if (modal) modal.style.display = "none";
-};
-
-// Bind events with safety checks
 if (openModalBtn) openModalBtn.onclick = openModal;
 if (ctaOpenModalBtn) ctaOpenModalBtn.onclick = openModal;
 if (closeModalBtn) closeModalBtn.onclick = closeModal;
 
-// Close when clicking outside the modal content
 window.onclick = (event) => {
-    if (event.target === modal) {
-        closeModal();
-    }
+    if (event.target === modal) closeModal();
 };
