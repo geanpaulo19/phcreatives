@@ -459,6 +459,24 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
     .hero { padding-top: 8rem; }
     nav { justify-content: space-between; padding: 1.2rem 5%; }
     .logo { font-size: 1.1rem; }
+
+    /* MOBILE SEARCH FIX */
+    .search-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    #search {
+        padding: 16px 20px 16px 50px; /* Reduced padding for mobile */
+        font-size: 16px; /* Prevents iOS auto-zoom */
+        line-height: normal; /* Fixes cursor alignment on mobile browsers */
+        display: flex;
+        align-items: center;
+    }
+
+    .search-icon {
+        left: 18px;
+    }
     
     .filter-container { 
         justify-content: flex-start; 
