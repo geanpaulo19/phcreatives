@@ -9,15 +9,6 @@ export const creatives = [
         expiryDate: "2026-02-17" 
     },
     {
-        name: "Liza Santos",
-        email: "liza@example.com",
-        skills: ["UI/UX", "Product", "Figma"],
-        bio: "Crafting human-centric interfaces for the next generation of Fintech and Web3 apps.",
-        image: "images/gean.jpg",
-        links: { behance: "#", dribbble: "#" },
-        expiryDate: "2026-02-16" 
-    },
-    {
         name: "Rico Blanco",
         email: "rico@example.com",
         skills: ["Brand", "Strategy"],
