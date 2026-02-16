@@ -15,7 +15,7 @@ export const creatives = [
     },
     {
         name: "Gean Paulo",
-        skills: ["Graphics", "Brand"],
+        skills: ["Graphics", "Brand", "Web"],
         bio: "Visual storyteller helping local startups find their identity through bold typography.",
         image: "images/gean.jpg",
         links: { instagram: "https://instagram.com/geanpau.lo", portfolio: "https://geanpaulo.com" }
