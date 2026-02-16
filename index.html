@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>PHCREATIVES | Philippine Designer & Developer Registry</title>
+    <meta name="title" content="PHCREATIVES | Philippine Designer & Developer Registry">
+    <meta name="description" content="A curated archive of the best Filipino digital talent. Discover top-tier designers, developers, motion artists, and brand strategists from the Philippines.">
+    <meta name="keywords" content="Filipino designers, Philippine developers, PH creatives, UI/UX Philippines, Frontend developers Philippines, Creative directory Philippines">
+    <meta name="author" content="Gean Paulo">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://phcreatives.com/"> <meta property="og:title" content="PHCREATIVES | Philippine Designer & Developer Registry">
+    <meta property="og:description" content="Explore and connect with the top digital talent in the Philippines. From Frontend to Brand Design.">
+    <meta property="og:image" content="https://phcreatives.com/assets/og-image.jpg"> <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://phcreatives.com/">
+    <meta property="twitter:title" content="PHCREATIVES | Philippine Digital Talent Archive">
+    <meta property="twitter:description" content="A curated directory of the best Filipino designers and developers.">
+    <meta property="twitter:image" content="https://phcreatives.com/assets/og-image.jpg">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glow-bg"></div>
+    
+    <nav>
+        <div class="logo"><span>PH</span>CREATIVES</div>
+        <div class="nav-links">
+            <a href="https://forms.gle/z2yKTauF9fc9142w5" target="_blank" class="btn-submit">Submit Profile</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>The Archive of <br><span class="gradient-text">Philippine Digital Talent</span></h1>
+        <p id="counter">Loading talent...</p>
+        
+        <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search" placeholder="Search name, bio, or skill...">
+        </div>
+    </header>
+
+    <div class="filter-container">
+        <button class="filter-btn active" data-filter="all">All Talent</button>
+        <button class="filter-btn" data-filter="Frontend">Frontend</button>
+        <button class="filter-btn" data-filter="UI/UX">UI/UX</button>
+        <button class="filter-btn" data-filter="Brand">Brand</button>
+        <button class="filter-btn" data-filter="Motion">Motion</button>
+        <button class="filter-btn" data-filter="Graphics">Graphics</button>
+    </div>
+
+    <main class="grid-container" id="directory"></main>
+
+    <a href="https://forms.gle/z2yKTauF9fc9142w5" target="_blank" class="fab" id="mobileSubmit">
+        <span class="fab-icon">+</span>
+    </a>
+
+    <footer>
+        <div class="footer-content">
+            <p>Built with <span>❤️</span> by Gean Paulo</p>
+            <div class="footer-links">
+                <a href="#" target="_blank">Twitter</a>
+                <a href="#" target="_blank">Portfolio</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
