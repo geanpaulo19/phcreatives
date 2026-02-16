@@ -71,7 +71,9 @@ function renderCards(data) {
 
     directory.innerHTML = data.map((person, index) => {
         const isPro = isUserPro(person);
-        const hasLongBio = isPro && person.longBio;
+        
+        // Updated: hasLongBio now strictly requires isPro to be true
+        const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
 
         const badgesHTML = person.skills.map(skill => 
             `<span class="badge" style="${getSkillStyle(skill)}">${skill}</span>`
