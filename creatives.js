@@ -1,12 +1,12 @@
 export const creatives = [
     {
-        name: "Anton Ramos",
-        email: "anton@example.com",
-        skills: ["Frontend", "Motion"],
-        bio: "Architecting scalable React applications with a focus on motion design and performance.",
+        name: "Gean Paulo Paguirigan",
+        email: "hello@geanpaulo.com",
+        skills: ["Frontend", "UI/UX", "Brand", "Graphics"],
+        bio: "Crafting high-performance web experiences through a blend of strategic design and modern frontend development.",
         image: "images/gean.jpg",
-        links: { github: "#", linkedin: "#" },
-        expiryDate: "2026-02-17" 
+        links: { website: "https://geanpaulo.com/", facebook: "https://facebook.com/geanpaulofrancois", github: "https://github.com/geanpaulo19", linkedin: "https://linkedin.com/in/gean-paulo-paguirigan-b391182aa" },
+        expiryDate: "2030-02-17" 
     },
     {
         name: "Rico Blanco",
@@ -23,13 +23,5 @@ export const creatives = [
         bio: "Bringing brands to life through 3D animation and high-fidelity micro-interactions.",
         image: "images/gean.jpg",
         links: { vimeo: "#", twitter: "#" }
-    },
-    {
-        name: "Gean Paulo",
-        email: "gean@example.com",
-        skills: ["Graphics", "Brand"],
-        bio: "Visual storyteller helping local startups find their identity through bold typography.",
-        image: "images/gean.jpg",
-        links: { instagram: "#", portfolio: "#" }
     }
 ];
