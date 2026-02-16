@@ -110,9 +110,9 @@ function renderCards(data) {
         const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
         const badgesHTML = person.skills.map(skill => `<span class="badge" style="${getSkillStyle(skill)}">${skill}</span>`).join('');
         
-        // Use the SVG Star instead of ✦
         const verifiedBadge = isPro ? VERIFIED_STAR_SVG : '';
-        const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration with ${person.name}" class="btn-hire">Work with Me</a>` : '';
+        // Fixed: Added stopPropagation to hire button
+        const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration" onclick="event.stopPropagation();" class="btn-hire">Work with Me</a>` : '';
 
         return `
             <div class="card ${isPro ? 'is-pro' : ''}" style="animation-delay: ${index * 0.05}s; cursor: pointer;" data-index="${index}">
@@ -128,8 +128,10 @@ function renderCards(data) {
                 </div>
                 ${hireButton}
                 <div class="social-links">
-                    ${person.email ? `<span class="social-link-item">email</span>` : ''}
-                    ${Object.keys(person.links).slice(0, 2).map(platform => `<span class="social-link-item">${platform}</span>`).join('')}
+                    ${person.email ? `<a href="mailto:${person.email}" onclick="event.stopPropagation();" class="social-link-item">email</a>` : ''}
+                    ${Object.entries(person.links).slice(0, 2).map(([platform, url]) => `
+                        <a href="${url}" target="_blank" onclick="event.stopPropagation();" class="social-link-item">${platform}</a>
+                    `).join('')}
                 </div>
             </div>
         `;
