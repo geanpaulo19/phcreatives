@@ -791,3 +791,70 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
 @keyframes skeleton-shimmer {
     100% { left: 100%; }
 }
+
+/* Apply Pro styles to drawer content when active */
+.drawer-content.is-pro {
+    /* Solid base color with a subtle 5% indigo overlay for the Pro feel */
+    background: linear-gradient(
+        rgba(99, 102, 241, 0.05), 
+        rgba(99, 102, 241, 0.05)
+    ), #111318; 
+    
+    /* Indigo border to match Pro card theme */
+    border-left: 1px solid var(--accent);
+}
+
+/* On mobile, adjust the border to the top instead of the left */
+@media (max-width: 768px) {
+    .drawer-content.is-pro {
+        border-left: none;
+        border-top: 1px solid var(--accent);
+    }
+}
+
+/* Add the "FEATURED PRO" tag inside the Pro drawer */
+.drawer-content.is-pro::after {
+    content: "FEATURED";
+    position: absolute;
+    top: 25px; 
+    left: 25px;
+    font-size: 0.6rem; 
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 1px;
+    padding: 3px 7px;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 6px;
+    pointer-events: none; /* Ensures the tag doesn't interfere with clicks */
+}
+
+.verified-star {
+    color: #FFD700; /* Vibrant Gold */
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 6px;
+    /* Soft golden glow */
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6));
+    animation: star-glow 3s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes star-glow {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6));
+    }
+    50% {
+        transform: scale(1.15) rotate(15deg);
+        /* Intense golden glow at peak pulse */
+        filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.9));
+    }
+}
+
+/* Ensure the drawer name aligns the icon properly */
+.drawer-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
