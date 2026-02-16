@@ -104,7 +104,7 @@ nav {
     justify-content: center;
     gap: 12px;
     margin-bottom: 4rem;
-    padding: 20px 5%;
+    padding: 24px 5%;
     position: sticky;
     top: -1px; 
     z-index: 100;
@@ -112,7 +112,7 @@ nav {
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
     border-bottom: 1px solid transparent;
-    transition: background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .filter-container.is-pinned {
@@ -120,6 +120,8 @@ nav {
     backdrop-filter: blur(24px);       
     -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 14px;
+    padding-bottom: 14px;
 }
 
 .filter-btn {
@@ -132,6 +134,13 @@ nav {
     font-size: 0.9rem;
     white-space: nowrap;
     flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.filter-container.is-pinned .filter-btn {
+    padding: 8px 18px;
+    font-size: 0.85rem;
+    transform: scale(0.96);
 }
 
 .filter-btn:hover { border-color: var(--text-dim); color: var(--text-main); }
@@ -174,7 +183,6 @@ nav {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Pro & Hire Styles */
 .card.is-pro {
     border: 1px solid var(--accent);
     background: linear-gradient(145deg, rgba(99, 102, 241, 0.05) 0%, var(--card-bg) 100%);
@@ -214,7 +222,6 @@ nav {
     object-fit: cover; border: 1px solid var(--border);
 }
 
-/* --- BADGE SCROLLING & FADE --- */
 .badge-container { 
     display: flex; 
     flex-wrap: nowrap;      
@@ -249,7 +256,6 @@ nav {
 
 h3 { margin: 0 0 0.5rem; font-family: 'Outfit'; font-size: 1.4rem; }
 
-/* --- BIO & EXPANSION --- */
 .bio-wrapper {
     flex-grow: 1; 
     display: flex;
@@ -304,7 +310,6 @@ h3 { margin: 0 0 0.5rem; font-family: 'Outfit'; font-size: 1.4rem; }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- SOCIAL LINKS --- */
 .social-links {
     display: flex;
     flex-wrap: wrap;       
@@ -368,16 +373,46 @@ h3 { margin: 0 0 0.5rem; font-family: 'Outfit'; font-size: 1.4rem; }
 .pricing-card li { margin-bottom: 12px; font-size: 0.9rem; color: var(--text-main); }
 .btn-pay { display: block; background: var(--accent); color: white; text-decoration: none; padding: 15px; border-radius: 12px; font-weight: 700; }
 
-/* Floating Action Button */
+/* --- REFINED FAB DESIGN --- */
 .fab {
-    position: fixed; bottom: 25px; right: 25px;
-    width: 56px; height: 56px; background: var(--accent);
-    color: white; border-radius: 50%; display: none; 
-    align-items: center; justify-content: center;
-    text-decoration: none; box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4); z-index: 1000;
+    position: fixed;
+    bottom: var(--grid-gap); /* Uses grid gap for alignment */
+    right: var(--grid-gap);  /* Aligns with the card edges */
+    background: var(--accent);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 16px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-/* --- FOOTER --- */
+.fab-plus {
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.fab-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.fab-text span {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
 footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
 .footer-content { max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; opacity: 0.6; }
 .footer-content p { color: var(--text-dim); font-size: 0.75rem; margin: 0; }
@@ -389,29 +424,62 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
 @media (max-width: 1200px) { .grid-container { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 900px) { .grid-container { grid-template-columns: repeat(2, 1fr); } }
 
+/* --- FIXED TABLET CTA (769px to 1024px) --- */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .cta-content {
+        padding: 2.5rem;
+        gap: 3rem; 
+        justify-content: space-between;
+        align-items: center;
+    }
+    .cta-text {
+        text-align: left;
+    }
+    .cta-text h2 {
+        font-size: 1.8rem;
+    }
+    .cta-text p {
+        font-size: 0.95rem;
+        max-width: 380px; 
+    }
+}
+
 @media (max-width: 768px) {
     :root { --grid-gap: 1.25rem; }
     .hero { padding-top: 8rem; }
     nav { justify-content: space-between; padding: 1.2rem 5%; }
     .logo { font-size: 1.1rem; }
     
-    /* --- SCALED DOWN MOBILE FILTERS --- */
     .filter-container { 
         justify-content: flex-start; 
         overflow-x: auto; 
-        padding: 12px 5%; 
+        padding: 16px 5%; 
         margin-bottom: 2rem; 
         scrollbar-width: none; 
-        gap: 8px; /* Tighter gap for mobile */
+        gap: 8px; 
     }
+    
+    .filter-container.is-pinned {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
     .filter-btn {
-        padding: 8px 16px; /* Scaled down from 10/22 */
-        font-size: 0.8rem;  /* Scaled down from 0.9 */
+        padding: 8px 16px; 
+        font-size: 0.8rem;  
+    }
+
+    .filter-container.is-pinned .filter-btn {
+        padding: 7px 14px;
+        font-size: 0.75rem;
+        transform: scale(1);
     }
 
     .filter-container::-webkit-scrollbar { display: none; }
     .grid-container { grid-template-columns: 1fr; }
-    .fab { display: flex; }
+    
+    .fab { display: flex; } /* Show FAB on mobile */
+    
     .btn-submit { display: none !important; }
     
     .modal {
@@ -472,6 +540,7 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
     -webkit-backdrop-filter: blur(10px);
     position: relative;
     overflow: hidden;
+    transition: all 0.4s ease;
 }
 
 .cta-content::before {
@@ -521,6 +590,7 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
 }
 
+/* Mobile Scaling for Pro CTA */
 @media (max-width: 768px) {
     .cta-content {
         flex-direction: column;
