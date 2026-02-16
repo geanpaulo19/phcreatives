@@ -338,3 +338,27 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
     .modal-content { padding: 2rem 1.5rem; width: 95%; }
     .price { font-size: 2rem; }
 }
+
+.no-results {
+    grid-column: 1 / -1; /* Spans across all grid columns */
+    text-align: center;
+    padding: 100px 20px;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    font-family: 'Outfit', sans-serif;
+    opacity: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+/* Optional: Add a small search emoji or icon above the text */
+.no-results::before {
+    content: "🔍";
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    opacity: 0.5;
+}
