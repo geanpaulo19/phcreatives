@@ -71,8 +71,6 @@ function renderCards(data) {
 
     directory.innerHTML = data.map((person, index) => {
         const isPro = isUserPro(person);
-        
-        // Updated: hasLongBio now strictly requires isPro to be true
         const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
 
         const badgesHTML = person.skills.map(skill => 
@@ -180,6 +178,14 @@ filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        
+        const scrollTarget = document.querySelector('.filter-container').offsetTop - 20;
+
+        window.scrollTo({
+            top: scrollTarget,
+            behavior: 'smooth'
+        });
+
         filterGallery();
     });
 });
@@ -193,6 +199,26 @@ function initializeGallery() {
 
     displayedCreatives = [...activePros, ...regulars]; 
     renderCards(displayedCreatives);
+    initStickyObserver();
+}
+
+/**
+ * FEATURE: Sticky Observer
+ * Adds .is-pinned class when filter bar hits the top
+ */
+function initStickyObserver() {
+    const filterContainer = document.querySelector('.filter-container');
+    
+    // threshold: [1] means trigger when 100% of the element is visible
+    // We check if it's NOT fully intersecting to see if it has started "sticking"
+    const observer = new IntersectionObserver(
+        ([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1),
+        { threshold: [1] }
+    );
+
+    if (filterContainer) {
+        observer.observe(filterContainer);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initializeGallery);
