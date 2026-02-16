@@ -32,6 +32,6 @@ export const creatives = [
         skills: ["Graphics", "Brand"],
         bio: "Visual storyteller helping local startups find their identity through bold typography.",
         image: "images/gean.jpg",
-        links: { instagram: "#", portfolio: "#" }
+        links: { instagram: "https://instagram.com/geanpau.lo", portfolio: "https://geanpaulo.com" }
     }
 ];
