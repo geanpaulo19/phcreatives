@@ -15,6 +15,13 @@ const drawerOverlay = document.querySelector('.drawer-overlay');
 let displayedCreatives = [];
 let currentFilteredData = []; 
 
+// Reusable SVG Star Component (Updated to Gold)
+const VERIFIED_STAR_SVG = `
+    <svg class="verified-star" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: #FFD700; display: inline-block; vertical-align: middle; margin-left: 6px; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4));">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+    </svg>
+`;
+
 /**
  * FEATURE: Automated Expiry Logic
  */
@@ -102,14 +109,16 @@ function renderCards(data) {
         const isPro = isUserPro(person);
         const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
         const badgesHTML = person.skills.map(skill => `<span class="badge" style="${getSkillStyle(skill)}">${skill}</span>`).join('');
-        const verifiedBadge = isPro ? `<span class="verified-icon" title="Featured Creative">✦</span>` : '';
+        
+        // Use the SVG Star instead of ✦
+        const verifiedBadge = isPro ? VERIFIED_STAR_SVG : '';
         const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration with ${person.name}" class="btn-hire">Work with Me</a>` : '';
 
         return `
             <div class="card ${isPro ? 'is-pro' : ''}" style="animation-delay: ${index * 0.05}s; cursor: pointer;" data-index="${index}">
                 <div class="profile-img"><img src="${person.image}" alt="${person.name}" loading="lazy"></div>
                 <div class="badge-container">${badgesHTML}</div>
-                <h3>${person.name} ${verifiedBadge}</h3>
+                <h3 style="display: flex; align-items: center; gap: 4px;">${person.name} ${verifiedBadge}</h3>
                 <div class="bio-wrapper">
                     <p class="bio">
                         ${person.bio}
@@ -133,10 +142,21 @@ function renderCards(data) {
 function openQuickView(person) {
     if (!drawer || !drawerBody) return;
 
+    const isPro = isUserPro(person);
+    
+    if (isPro) {
+        drawerContent.classList.add('is-pro');
+    } else {
+        drawerContent.classList.remove('is-pro');
+    }
+
     drawerBody.innerHTML = `
         <div class="drawer-header">
             <img src="${person.image}" alt="${person.name}" class="drawer-img">
-            <h2 class="drawer-name">${person.name}</h2>
+            <h2 class="drawer-name" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                ${person.name} 
+                ${isPro ? VERIFIED_STAR_SVG.replace('width="18" height="18"', 'width="24" height="24"') : ''}
+            </h2>
             <div class="badge-container" style="justify-content: center; mask-image: none; -webkit-mask-image: none; overflow: visible; flex-wrap: wrap;">
                 ${person.skills.map(s => `<span class="badge" style="${getSkillStyle(s)}">${s}</span>`).join('')}
             </div>
@@ -150,12 +170,16 @@ function openQuickView(person) {
         <div class="drawer-section">
             <p class="drawer-section-title">Connect</p>
             <div class="social-links" style="border: none; padding: 0;">
-                ${Object.entries(person.links).map(([platform, url]) => `<a href="${url}" target="_blank" class="social-link-item">${platform}</a>`).join('')}
+                ${Object.entries(person.links).map(([platform, url]) => `
+                    <a href="${url}" target="_blank" class="social-link-item">${platform}</a>
+                `).join('')}
                 ${person.email ? `<a href="mailto:${person.email}" class="social-link-item">Email</a>` : ''}
             </div>
         </div>
 
-        <a href="mailto:${person.email}" class="btn-hire" style="margin-top: 4rem; padding: 16px; font-size: 0.9rem;">Work with ${person.name.split(' ')[0]}</a>
+        <a href="mailto:${person.email}" class="btn-hire" style="margin-top: 4rem; padding: 16px; font-size: 0.9rem;">
+            Work with ${person.name.split(' ')[0]}
+        </a>
     `;
     
     drawer.classList.add('is-open');
@@ -277,7 +301,7 @@ function initializeGallery() {
         renderCards(displayedCreatives);
         updateFilterCounts(); 
         initStickyObserver();
-        initFooterObserver(); // Added observer initialization
+        initFooterObserver(); 
     }, 800);
 }
 
@@ -294,7 +318,7 @@ const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
 const closeModalBtn = document.querySelector(".close-modal");
-const fabBtn = document.querySelector(".fab"); // Target the FAB
+const fabBtn = document.querySelector(".fab"); 
 
 const openModal = () => { if (modal) modal.style.display = "flex"; };
 const closeModal = () => { if (modal) modal.style.display = "none"; };
@@ -302,8 +326,5 @@ const closeModal = () => { if (modal) modal.style.display = "none"; };
 if (openModalBtn) openModalBtn.onclick = openModal;
 if (ctaOpenModalBtn) ctaOpenModalBtn.onclick = openModal;
 if (closeModalBtn) closeModalBtn.onclick = closeModal;
-
-// Optional: Link FAB to Pricing Modal instead of external form
-// if (fabBtn) fabBtn.onclick = (e) => { e.preventDefault(); openModal(); };
 
 window.onclick = (event) => { if (event.target === modal) closeModal(); };
