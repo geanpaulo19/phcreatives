@@ -108,8 +108,6 @@ nav {
     position: sticky;
     top: -1px; 
     z-index: 100;
-    
-    /* Default: Transparent state */
     background: rgba(10, 12, 16, 0);
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
@@ -117,10 +115,9 @@ nav {
     transition: background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease;
 }
 
-/* Scrolled/Pinned State: Solid heavy glassmorphism */
 .filter-container.is-pinned {
-    background: rgba(10, 12, 16, 0.85); /* Slightly higher opacity for solid feel */
-    backdrop-filter: blur(24px);       /* Heavy blur for premium frost effect */
+    background: rgba(10, 12, 16, 0.85); 
+    backdrop-filter: blur(24px);       
     -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -397,7 +394,21 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
     .hero { padding-top: 8rem; }
     nav { justify-content: space-between; padding: 1.2rem 5%; }
     .logo { font-size: 1.1rem; }
-    .filter-container { justify-content: flex-start; overflow-x: auto; padding: 15px 5%; margin-bottom: 2.5rem; scrollbar-width: none; }
+    
+    /* --- SCALED DOWN MOBILE FILTERS --- */
+    .filter-container { 
+        justify-content: flex-start; 
+        overflow-x: auto; 
+        padding: 12px 5%; 
+        margin-bottom: 2rem; 
+        scrollbar-width: none; 
+        gap: 8px; /* Tighter gap for mobile */
+    }
+    .filter-btn {
+        padding: 8px 16px; /* Scaled down from 10/22 */
+        font-size: 0.8rem;  /* Scaled down from 0.9 */
+    }
+
     .filter-container::-webkit-scrollbar { display: none; }
     .grid-container { grid-template-columns: 1fr; }
     .fab { display: flex; }
