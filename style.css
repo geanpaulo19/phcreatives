@@ -352,3 +352,74 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
     display: block;
     opacity: 0.5;
 }
+
+/* --- PRO CTA SECTION --- */
+.pro-cta {
+    padding: 0 var(--grid-gap) 5rem var(--grid-gap);
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.cta-content {
+    background: linear-gradient(145deg, rgba(99, 102, 241, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid var(--border);
+    /* Aligned with .card border-radius */
+    border-radius: 24px; 
+    padding: 3.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle glow effect behind the CTA */
+.cta-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+    z-index: -1;
+}
+
+.cta-text h2 {
+    font-family: 'Outfit';
+    font-size: 2.2rem;
+    margin: 0 0 0.5rem;
+}
+
+.cta-text p {
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0;
+}
+
+.pro-cta .btn-pro {
+    height: 56px;
+    padding: 0 35px;
+    font-size: 1rem;
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+    border-radius: 12px; /* Matching your button style */
+}
+
+@media (max-width: 768px) {
+    .cta-content {
+        flex-direction: column;
+        text-align: center;
+        /* Balanced padding for mobile */
+        padding: 2.5rem 1.5rem; 
+        gap: 2rem;
+        border-radius: 24px;
+    }
+    .cta-text h2 { font-size: 1.8rem; }
+    .cta-text p { font-size: 1rem; }
+    .pro-cta .btn-pro { width: 100%; }
+}
