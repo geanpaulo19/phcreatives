@@ -71,7 +71,7 @@ nav {
 .btn-pro { background: rgba(99, 102, 241, 0.1); border: 1px solid var(--accent); color: var(--accent); }
 
 /* Hero & Search */
-.hero { text-align: center; padding: 10rem 1.5rem 2rem; }
+.hero { text-align: center; padding: 10rem 1.5rem 0rem; } 
 .hero h1 { font-family: 'Outfit'; font-size: clamp(2.2rem, 6vw, 4rem); line-height: 1.1; margin: 0 0 1rem; }
 .gradient-text {
     background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
@@ -98,13 +98,31 @@ nav {
 
 #search:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
 
-/* Filters */
+/* --- UPDATED STICKY FILTERS --- */
 .filter-container {
     display: flex;
     justify-content: center;
     gap: 12px;
     margin-bottom: 4rem;
-    padding: 0 5%;
+    padding: 20px 5%;
+    position: sticky;
+    top: -1px; 
+    z-index: 100;
+    
+    /* Default: Transparent state */
+    background: rgba(10, 12, 16, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    border-bottom: 1px solid transparent;
+    transition: background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease;
+}
+
+/* Scrolled/Pinned State: Solid heavy glassmorphism */
+.filter-container.is-pinned {
+    background: rgba(10, 12, 16, 0.85); /* Slightly higher opacity for solid feel */
+    backdrop-filter: blur(24px);       /* Heavy blur for premium frost effect */
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .filter-btn {
@@ -245,10 +263,9 @@ h3 { margin: 0 0 0.5rem; font-family: 'Outfit'; font-size: 1.4rem; }
     color: var(--text-dim); 
     font-size: 0.9rem; 
     line-height: 1.6; 
-    margin-bottom: 0.75rem; /* Tight spacing for Pro cards */
+    margin-bottom: 0.75rem; 
 }
 
-/* Only regular cards (no Read More button) get the full 2rem gap */
 .bio-wrapper:not(:has(.read-more-btn)) .bio {
     margin-bottom: 2rem;
 }
@@ -277,7 +294,7 @@ h3 { margin: 0 0 0.5rem; font-family: 'Outfit'; font-size: 1.4rem; }
     text-transform: uppercase;
     cursor: pointer;
     padding: 0;
-    margin-bottom: 2rem; /* Spacing between button and links/hire button */
+    margin-bottom: 2rem; 
     align-self: flex-start;
 }
 
@@ -380,7 +397,7 @@ footer { padding: 2rem 5%; border-top: 1px solid var(--border); }
     .hero { padding-top: 8rem; }
     nav { justify-content: space-between; padding: 1.2rem 5%; }
     .logo { font-size: 1.1rem; }
-    .filter-container { justify-content: flex-start; overflow-x: auto; padding: 10px 5%; margin-bottom: 2.5rem; }
+    .filter-container { justify-content: flex-start; overflow-x: auto; padding: 15px 5%; margin-bottom: 2.5rem; scrollbar-width: none; }
     .filter-container::-webkit-scrollbar { display: none; }
     .grid-container { grid-template-columns: 1fr; }
     .fab { display: flex; }
