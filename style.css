@@ -391,6 +391,16 @@ h3 { margin: 0 0 0.5rem; font-family: 'Outfit'; font-size: 1.4rem; }
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+    opacity: 1;
+    visibility: visible;
+}
+
+.fab-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(20px) scale(0.9); /* Adds a "sinking" effect */
+    pointer-events: none;
 }
 
 .fab-plus {
