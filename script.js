@@ -13,7 +13,7 @@ const closeDrawerBtn = document.querySelector('.close-drawer');
 const drawerOverlay = document.querySelector('.drawer-overlay');
 
 let displayedCreatives = [];
-let currentFilteredData = []; // Track filtered items for correct drawer mapping
+let currentFilteredData = []; 
 
 /**
  * FEATURE: Automated Expiry Logic
@@ -28,9 +28,6 @@ function isUserPro(person) {
     return expiry >= today;
 }
 
-/**
- * Shuffles an array using the Fisher-Yates algorithm
- */
 function shuffle(array) {
     let currentIndex = array.length, randomIndex;
     while (currentIndex != 0) {
@@ -41,34 +38,62 @@ function shuffle(array) {
     return array;
 }
 
-/**
- * Generates a unique, vibrant color per skill string.
- */
 function getSkillStyle(str) {
     let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
+    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
     const h = Math.abs(hash * 137.5) % 360; 
-    const color = `hsl(${h}, 95%, 75%)`;
-    const background = `hsla(${h}, 95%, 75%, 0.12)`;
-    const border = `hsla(${h}, 95%, 75%, 0.4)`;
-    const shadow = `hsla(${h}, 95%, 75%, 0.25)`;
-    return `background: ${background}; color: ${color}; border: 1px solid ${border}; text-shadow: 0 0 8px ${shadow};`;
+    return `background: hsla(${h}, 95%, 75%, 0.12); color: hsl(${h}, 95%, 75%); border: 1px solid hsla(${h}, 95%, 75%, 0.4); text-shadow: 0 0 8px hsla(${h}, 95%, 75%, 0.25);`;
 }
 
 /**
- * Renders the creative cards into the grid
+ * FEATURE 3: Skeleton Loader Template
+ */
+function showSkeletons() {
+    directory.innerHTML = Array(8).fill(0).map(() => `
+        <div class="skeleton-card">
+            <div class="skeleton-img"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line"></div>
+        </div>
+    `).join('');
+}
+
+/**
+ * FEATURE 4: Update Filter Button Counts
+ */
+function updateFilterCounts() {
+    filterBtns.forEach(btn => {
+        const filter = btn.dataset.filter;
+        let count = 0;
+        if (filter === 'all') {
+            count = displayedCreatives.length;
+        } else {
+            count = displayedCreatives.filter(p => 
+                p.skills.some(s => s.toLowerCase() === filter.toLowerCase())
+            ).length;
+        }
+        
+        const label = btn.getAttribute('data-label') || btn.innerText;
+        btn.setAttribute('data-label', label);
+        btn.innerText = `${label} (${count})`;
+    });
+}
+
+/**
+ * Renders the creative cards
  */
 function renderCards(data) {
-    currentFilteredData = data; // Keep sync with visible cards
+    currentFilteredData = data; 
     counter.innerText = `Showcasing ${data.length} curated Filipino creatives`;
 
     if (data.length === 0) {
         directory.innerHTML = `
-            <div class="no-results">
-                <p>No creatives found matching that search.</p>
-                <button onclick="window.clearSearch()" class="filter-btn" style="margin-top: 20px; border-color: var(--accent); color: var(--accent);">Clear Search</button>
+            <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
+                <p style="font-size: 1.1rem; color: var(--text-dim); margin-bottom: 1.5rem;">No creatives found matching that search.</p>
+                <button onclick="window.clearSearch()" style="background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 24px; border-radius: 12px; cursor: pointer; font-family: inherit; transition: all 0.3s ease;">
+                    Clear Search & Filters
+                </button>
             </div>`;
         return;
     }
@@ -103,7 +128,7 @@ function renderCards(data) {
 }
 
 /**
- * FEATURE: Quick View Logic
+ * Quick View Logic
  */
 function openQuickView(person) {
     if (!drawer || !drawerBody) return;
@@ -125,9 +150,7 @@ function openQuickView(person) {
         <div class="drawer-section">
             <p class="drawer-section-title">Connect</p>
             <div class="social-links" style="border: none; padding: 0;">
-                ${Object.entries(person.links).map(([platform, url]) => 
-                    `<a href="${url}" target="_blank" class="social-link-item">${platform}</a>`
-                ).join('')}
+                ${Object.entries(person.links).map(([platform, url]) => `<a href="${url}" target="_blank" class="social-link-item">${platform}</a>`).join('')}
                 ${person.email ? `<a href="mailto:${person.email}" class="social-link-item">Email</a>` : ''}
             </div>
         </div>
@@ -145,7 +168,7 @@ const closeDrawer = () => {
 };
 
 /**
- * FEATURE: Mobile Swipe-to-Close Logic
+ * Mobile Swipe-to-Close
  */
 let touchStartY = 0;
 if (drawerContent) {
@@ -155,16 +178,12 @@ if (drawerContent) {
 
     drawerContent.addEventListener('touchend', (e) => {
         const touchEndY = e.changedTouches[0].clientY;
-        // If swiped down more than 100px and user is at the top of drawer scroll
         if (touchEndY - touchStartY > 100 && drawerContent.scrollTop <= 0) {
             closeDrawer();
         }
     }, { passive: true });
 }
 
-/**
- * FEATURE: Toggle Expanded Bio
- */
 window.toggleBio = (index, btn) => {
     const moreText = document.getElementById(`more-${index}`);
     if (moreText) {
@@ -173,32 +192,23 @@ window.toggleBio = (index, btn) => {
     }
 };
 
-/**
- * Filters the data
- */
 function filterGallery() {
     const query = searchInput.value.toLowerCase().trim();
     const activeBtn = document.querySelector('.filter-btn.active');
     const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
 
     const filtered = displayedCreatives.filter(person => {
-        const matchesSearch = 
-            person.name.toLowerCase().includes(query) || 
-            person.bio.toLowerCase().includes(query) ||
-            (person.longBio && person.longBio.toLowerCase().includes(query)) ||
-            person.skills.some(s => s.toLowerCase().includes(query));
-                              
-        let matchesFilter = activeFilter === 'all' || person.skills.some(skill => 
-            skill.toLowerCase() === activeFilter.toLowerCase()
-        );
-        
+        const matchesSearch = person.name.toLowerCase().includes(query) || 
+                             person.bio.toLowerCase().includes(query) ||
+                             (person.longBio && person.longBio.toLowerCase().includes(query)) ||
+                             person.skills.some(s => s.toLowerCase().includes(query));
+        let matchesFilter = activeFilter === 'all' || person.skills.some(skill => skill.toLowerCase() === activeFilter.toLowerCase());
         return matchesSearch && matchesFilter;
     });
 
     renderCards(filtered);
 }
 
-// --- HELPER: Clear Search ---
 window.clearSearch = () => {
     searchInput.value = '';
     filterBtns.forEach(b => b.classList.remove('active'));
@@ -206,8 +216,7 @@ window.clearSearch = () => {
     filterGallery();
 };
 
-// --- EVENT LISTENERS ---
-
+// Event Listeners
 let searchTimeout;
 searchInput.addEventListener('input', () => {
     clearTimeout(searchTimeout);
@@ -222,20 +231,11 @@ filterBtns.forEach(btn => {
     });
 });
 
-// Event Delegation for Card Clicks (Quick View)
 directory.addEventListener('click', (e) => {
     const card = e.target.closest('.card');
-    if (!card) return;
-
-    // Prevent drawer if clicking buttons/links
-    if (e.target.closest('.btn-hire') || e.target.closest('.social-links') || e.target.closest('.read-more-btn')) {
-        return;
-    }
-
+    if (!card || e.target.closest('.btn-hire') || e.target.closest('.social-links') || e.target.closest('.read-more-btn')) return;
     const index = card.getAttribute('data-index');
-    if (currentFilteredData[index]) {
-        openQuickView(currentFilteredData[index]);
-    }
+    if (currentFilteredData[index]) openQuickView(currentFilteredData[index]);
 });
 
 if (closeDrawerBtn) closeDrawerBtn.onclick = closeDrawer;
@@ -245,32 +245,28 @@ if (drawerOverlay) drawerOverlay.onclick = closeDrawer;
  * Initial Initialization
  */
 function initializeGallery() {
-    const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
-    const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
+    showSkeletons(); 
 
-    displayedCreatives = [...activePros, ...regulars]; 
-    renderCards(displayedCreatives);
-    initStickyObserver();
+    setTimeout(() => {
+        const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
+        const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
+
+        displayedCreatives = [...activePros, ...regulars]; 
+        renderCards(displayedCreatives);
+        updateFilterCounts(); 
+        initStickyObserver();
+    }, 800);
 }
 
-/**
- * FEATURE: Sticky Observer
- */
 function initStickyObserver() {
     const filterContainer = document.querySelector('.filter-container');
-    const observer = new IntersectionObserver(
-        ([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1),
-        { threshold: [1], rootMargin: '-1px 0px 0px 0px' }
-    );
-
-    if (filterContainer) {
-        observer.observe(filterContainer);
-    }
+    const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1), { threshold: [1], rootMargin: '-1px 0px 0px 0px' });
+    if (filterContainer) observer.observe(filterContainer);
 }
 
 document.addEventListener('DOMContentLoaded', initializeGallery);
 
-// --- MODAL LOGIC (Pricing) ---
+// Modal Logic
 const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
@@ -283,6 +279,4 @@ if (openModalBtn) openModalBtn.onclick = openModal;
 if (ctaOpenModalBtn) ctaOpenModalBtn.onclick = openModal;
 if (closeModalBtn) closeModalBtn.onclick = closeModal;
 
-window.onclick = (event) => {
-    if (event.target === modal) closeModal();
-};
+window.onclick = (event) => { if (event.target === modal) closeModal(); };
