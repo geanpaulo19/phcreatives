@@ -5,6 +5,23 @@ const searchInput = document.getElementById('search');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const counter = document.getElementById('counter');
 
+// 1. Create a shuffled copy of the data to use as our source
+let displayedCreatives = [];
+
+/**
+ * Shuffles an array using the Fisher-Yates algorithm
+ */
+function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
 /**
  * Generates a unique, vibrant color per skill string.
  */
@@ -68,21 +85,20 @@ function renderCards(data) {
 }
 
 /**
- * Filters the data (Optimized for accuracy)
+ * Filters the data (Uses the randomized list as the source)
  */
 function filterGallery() {
     const query = searchInput.value.toLowerCase().trim();
     const activeBtn = document.querySelector('.filter-btn.active');
     const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
 
-    const filtered = creatives.filter(person => {
-        // 1. Text Search Logic: Search across Name, Bio, AND the Skills array
+    // Use displayedCreatives (the shuffled version) instead of creatives (original)
+    const filtered = displayedCreatives.filter(person => {
         const matchesSearch = 
             person.name.toLowerCase().includes(query) || 
             person.bio.toLowerCase().includes(query) ||
             person.skills.some(s => s.toLowerCase().includes(query));
                               
-        // 2. Category Logic: Check against the buttons
         let matchesFilter = true;
         if (activeFilter !== 'all') {
             matchesFilter = person.skills.some(skill => 
@@ -90,7 +106,6 @@ function filterGallery() {
             );
         }
         
-        // Accurate result: Item must satisfy the category AND the search text
         return matchesSearch && matchesFilter;
     });
 
@@ -114,5 +129,7 @@ filterBtns.forEach(btn => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderCards(creatives);
+    // Randomize on load and store in our local variable
+    displayedCreatives = shuffle([...creatives]); 
+    renderCards(displayedCreatives);
 });
