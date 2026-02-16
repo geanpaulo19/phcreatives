@@ -5,8 +5,24 @@ const searchInput = document.getElementById('search');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const counter = document.getElementById('counter');
 
-// 1. Create a shuffled copy of the data to use as our source
 let displayedCreatives = [];
+
+/**
+ * FEATURE: Automated Expiry Logic (Fixed)
+ * Normalizes both dates to local midnight to ensure accurate day-by-day expiration.
+ */
+function isUserPro(person) {
+    if (!person.expiryDate) return false;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const [year, month, day] = person.expiryDate.split('-').map(Number);
+    const expiry = new Date(year, month - 1, day); 
+    expiry.setHours(0, 0, 0, 0);
+
+    return expiry >= today;
+}
 
 /**
  * Shuffles an array using the Fisher-Yates algorithm
@@ -36,12 +52,7 @@ function getSkillStyle(str) {
     const border = `hsla(${h}, 95%, 75%, 0.4)`;
     const shadow = `hsla(${h}, 95%, 75%, 0.25)`;
     
-    return `
-        background: ${background}; 
-        color: ${color}; 
-        border: 1px solid ${border}; 
-        text-shadow: 0 0 8px ${shadow};
-    `;
+    return `background: ${background}; color: ${color}; border: 1px solid ${border}; text-shadow: 0 0 8px ${shadow};`;
 }
 
 /**
@@ -56,27 +67,41 @@ function renderCards(data) {
     }
 
     directory.innerHTML = data.map((person, index) => {
+        const isPro = isUserPro(person);
+
         const badgesHTML = person.skills.map(skill => 
             `<span class="badge" style="${getSkillStyle(skill)}">${skill}</span>`
         ).join('');
 
+        // Standard Social Links
         const linksHTML = Object.entries(person.links)
             .filter(([platform, url]) => url && url.trim() !== "")
             .map(([platform, url]) => 
-                `<a href="${url}" target="_blank">${platform}</a>`
+                `<a href="${url}" target="_blank" class="social-link-item">${platform}</a>`
             ).join('');
 
+        // Universal Email Link
+        const emailLinkHTML = person.email ? 
+            `<a href="mailto:${person.email}" class="social-link-item">email</a>` : '';
+
+        const verifiedBadge = isPro ? `<span class="verified-icon" title="Featured Creative">✦</span>` : '';
+        
+        const hireButton = isPro ? 
+            `<a href="mailto:${person.email}?subject=Inquiry: Collaboration with ${person.name}" class="btn-hire">Work with Me</a>` : '';
+
         return `
-            <div class="card" style="animation-delay: ${index * 0.05}s">
+            <div class="card ${isPro ? 'is-pro' : ''}" style="animation-delay: ${index * 0.05}s">
                 <div class="profile-img">
                     <img src="${person.image}" alt="${person.name}" loading="lazy">
                 </div>
                 <div class="badge-container">
                     ${badgesHTML}
                 </div>
-                <h3>${person.name}</h3>
+                <h3>${person.name} ${verifiedBadge}</h3>
                 <p class="bio">${person.bio}</p>
+                ${hireButton}
                 <div class="social-links">
+                    ${emailLinkHTML}
                     ${linksHTML}
                 </div>
             </div>
@@ -85,14 +110,13 @@ function renderCards(data) {
 }
 
 /**
- * Filters the data (Uses the randomized list as the source)
+ * Filters the data
  */
 function filterGallery() {
     const query = searchInput.value.toLowerCase().trim();
     const activeBtn = document.querySelector('.filter-btn.active');
     const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
 
-    // Use displayedCreatives (the shuffled version) instead of creatives (original)
     const filtered = displayedCreatives.filter(person => {
         const matchesSearch = 
             person.name.toLowerCase().includes(query) || 
@@ -128,8 +152,27 @@ filterBtns.forEach(btn => {
     });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Randomize on load and store in our local variable
-    displayedCreatives = shuffle([...creatives]); 
+/**
+ * Initial Initialization
+ */
+function initializeGallery() {
+    const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
+    const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
+
+    displayedCreatives = [...activePros, ...regulars]; 
     renderCards(displayedCreatives);
-});
+}
+
+document.addEventListener('DOMContentLoaded', initializeGallery);
+
+// --- MODAL LOGIC ---
+const modal = document.getElementById("pricingModal");
+const openModalBtn = document.getElementById("openPricing");
+const closeModalBtn = document.querySelector(".close-modal");
+
+if (openModalBtn) openModalBtn.onclick = () => modal.style.display = "flex";
+if (closeModalBtn) closeModalBtn.onclick = () => modal.style.display = "none";
+
+window.onclick = (event) => {
+    if (event.target == modal) modal.style.display = "none";
+}
