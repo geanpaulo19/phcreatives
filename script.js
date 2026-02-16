@@ -46,7 +46,7 @@ function getSkillStyle(str) {
 }
 
 /**
- * FEATURE 3: Skeleton Loader Template
+ * FEATURE: Skeleton Loader Template
  */
 function showSkeletons() {
     directory.innerHTML = Array(8).fill(0).map(() => `
@@ -60,7 +60,7 @@ function showSkeletons() {
 }
 
 /**
- * FEATURE 4: Update Filter Button Counts
+ * FEATURE: Update Filter Button Counts
  */
 function updateFilterCounts() {
     filterBtns.forEach(btn => {
@@ -242,6 +242,28 @@ if (closeDrawerBtn) closeDrawerBtn.onclick = closeDrawer;
 if (drawerOverlay) drawerOverlay.onclick = closeDrawer;
 
 /**
+ * FEATURE: Mobile FAB Fade-out
+ */
+function initFooterObserver() {
+    const fab = document.querySelector('.fab');
+    const footer = document.querySelector('footer');
+    
+    if (!fab || !footer) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                fab.classList.add('fab-hidden');
+            } else {
+                fab.classList.remove('fab-hidden');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    observer.observe(footer);
+}
+
+/**
  * Initial Initialization
  */
 function initializeGallery() {
@@ -255,6 +277,7 @@ function initializeGallery() {
         renderCards(displayedCreatives);
         updateFilterCounts(); 
         initStickyObserver();
+        initFooterObserver(); // Added observer initialization
     }, 800);
 }
 
@@ -271,6 +294,7 @@ const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
 const closeModalBtn = document.querySelector(".close-modal");
+const fabBtn = document.querySelector(".fab"); // Target the FAB
 
 const openModal = () => { if (modal) modal.style.display = "flex"; };
 const closeModal = () => { if (modal) modal.style.display = "none"; };
@@ -278,5 +302,8 @@ const closeModal = () => { if (modal) modal.style.display = "none"; };
 if (openModalBtn) openModalBtn.onclick = openModal;
 if (ctaOpenModalBtn) ctaOpenModalBtn.onclick = openModal;
 if (closeModalBtn) closeModalBtn.onclick = closeModal;
+
+// Optional: Link FAB to Pricing Modal instead of external form
+// if (fabBtn) fabBtn.onclick = (e) => { e.preventDefault(); openModal(); };
 
 window.onclick = (event) => { if (event.target === modal) closeModal(); };
