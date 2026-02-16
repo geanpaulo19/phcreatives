@@ -12,16 +12,18 @@
     <meta name="robots" content="index, follow">
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://phcreatives.com/"> <meta property="og:title" content="PHCREATIVES | Philippine Designer & Developer Registry">
+    <meta property="og:url" content="https://phcreatives.com/"> 
+    <meta property="og:title" content="PHCREATIVES | Philippine Designer & Developer Registry">
     <meta property="og:description" content="Explore and connect with the top digital talent in the Philippines. From Frontend to Brand Design.">
-    <meta property="og:image" content="https://phcreatives.com/assets/og-image.jpg"> <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://phcreatives.com/">
+    <meta property="og:image" content="https://phcreatives.com/assets/og-image.jpg"> 
+    
+    <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="PHCREATIVES | Philippine Digital Talent Archive">
     <meta property="twitter:description" content="A curated directory of the best Filipino designers and developers.">
     <meta property="twitter:image" content="https://phcreatives.com/assets/og-image.jpg">
 
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="glow-bg"></div>
@@ -29,9 +31,30 @@
     <nav>
         <div class="logo"><span>PH</span>CREATIVES</div>
         <div class="nav-links">
+            <button id="openPricing" class="btn-pro">Go Pro ✨</button>
             <a href="https://forms.gle/z2yKTauF9fc9142w5" target="_blank" class="btn-submit">Submit Profile</a>
         </div>
     </nav>
+
+    <div id="pricingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Boost Your Visibility 🚀</h2>
+            <p>Join the Pro Archive to get hired by top companies and startups.</p>
+            
+            <div class="pricing-card">
+                <div class="price">₱280 <span>/ week</span></div>
+                <p class="price-subtitle">Approx. $4.99 USD</p>
+                <ul>
+                    <li>✨ <strong>Priority Listing:</strong> Shuffled at the top of the grid.</li>
+                    <li>✦ <strong>Verified Badge:</strong> Stand out with a premium icon.</li>
+                    <li>📩 <strong>Direct CTA:</strong> A dedicated "Work with Me" button.</li>
+                    <li>📈 <strong>Maximum Reach:</strong> Higher click-through rate.</li>
+                </ul>
+                <a href="https://forms.gle/BCZUuRakwEtE4Fzc8" class="btn-pay">Get Featured Now</a>
+            </div>
+        </div>
+    </div>
 
     <header class="hero">
         <h1>The Archive of <br><span class="gradient-text">Philippine Digital Talent</span></h1>
@@ -46,7 +69,6 @@
     <div class="filter-container">
         <button class="filter-btn active" data-filter="all">All Talent</button>
         <button class="filter-btn" data-filter="Frontend">Frontend</button>
-        <button class="filter-btn" data-filter="Web">Web</button>
         <button class="filter-btn" data-filter="UI/UX">UI/UX</button>
         <button class="filter-btn" data-filter="Brand">Brand</button>
         <button class="filter-btn" data-filter="Motion">Motion</button>
