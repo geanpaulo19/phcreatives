@@ -1,6 +1,6 @@
 export const creatives = [
     {
-        name: "Gean Paulo Paguirigan",
+        name: "Gean Paulo",
         email: "hello@geanpaulo.com",
         skills: ["Frontend", "UI/UX", "Brand", "Graphics"],
         bio: "Crafting high-performance web experiences through a blend of strategic design and modern frontend development.",
