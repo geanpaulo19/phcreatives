@@ -14,6 +14,8 @@ export const creatives = [
             { title: "Zen New Tab", url: "https://chromewebstore.google.com/detail/chhlgdhacpabpphphdhjicnpbpklpdbk?utm_source=item-share-cb" },
             { title: "Finetouch Maintenance", url: "https://finetouchmaintenance.com/" },
             { title: "In the Dog House Texas", url: "https://www.inthedoghousetx.com/" },
+            { title: "Paramo Construction", url: "https://paramoconstructioninc.com/" },
+            { title: "Currency Converter", url: "https://fxmirror.netlify.app/" },
             { title: "PayPal Fees Calculator", url: "https://ppfees.netlify.app/" }
         ],
         links: { website: "https://geanpaulo.com/", github: "https://github.com/geanpaulo19" },
