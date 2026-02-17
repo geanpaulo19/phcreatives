@@ -39,31 +39,31 @@
         </div>
     </nav>
 
-<div id="pricingModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h2 style="font-family: 'Outfit'; margin-bottom: 0.5rem;">Boost Your Visibility 🚀</h2>
-        <p style="color: var(--text-dim); font-size: 0.9rem;">Join the Pro Archive to get hired by top companies and startups.</p>
-        
-        <div class="pricing-card">
-            <div class="price">₱280 <span>/ week</span></div>
-            <p class="price-subtitle">Approx. $4.99 USD</p>
-            <ul>
-                <li>✨ <strong>Priority Listing:</strong> Shuffled at the top of the grid.</li>
-                <li>✦ <strong>Verified Badge:</strong> Stand out with a premium icon.</li>
-                <li>🔗 <strong>Unlimited Projects:</strong> Show all your work (Free limit: 5).</li>
-                <li>📖 <strong>Expanded Bio:</strong> Share your full story and deep-dive details.</li>
-                <li>📩 <strong>Direct CTA:</strong> A dedicated "Work with Me" button.</li>
-                <li>📈 <strong>Maximum Reach:</strong> Higher click-through rates and SEO.</li>
-            </ul>
-            <a href="https://forms.gle/BCZUuRakwEtE4Fzc8" class="btn-pay">Get Featured Now</a>
+    <div id="pricingModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="font-family: 'Outfit'; margin-bottom: 0.5rem;">Boost Your Visibility 🚀</h2>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Join the Pro Archive to get hired by top companies and startups.</p>
             
-            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1.5rem; font-style: italic;">
-                <strong>Pro Tip:</strong> Pro users can list unlimited project links to showcase the full depth of their portfolio!
-            </p>
+            <div class="pricing-card">
+                <div class="price">₱280 <span>/ week</span></div>
+                <p class="price-subtitle">Approx. $4.99 USD</p>
+                <ul>
+                    <li>✨ <strong>Priority Listing:</strong> Shuffled at the top of the grid.</li>
+                    <li>✦ <strong>Verified Badge:</strong> Stand out with a premium icon.</li>
+                    <li>🔗 <strong>Unlimited Projects:</strong> Show all your work (Free limit: 5).</li>
+                    <li>📖 <strong>Expanded Bio:</strong> Share your full story and deep-dive details.</li>
+                    <li>📩 <strong>Direct CTA:</strong> A dedicated "Work with Me" button.</li>
+                    <li>📈 <strong>Maximum Reach:</strong> Higher click-through rates and SEO.</li>
+                </ul>
+                <a href="https://forms.gle/BCZUuRakwEtE4Fzc8" class="btn-pay">Get Featured Now</a>
+                
+                <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1.5rem; font-style: italic;">
+                    <strong>Pro Tip:</strong> Pro users can list unlimited project links to showcase the full depth of their portfolio!
+                </p>
+            </div>
         </div>
     </div>
-</div>
 
     <header class="hero">
         <h1>The Archive of <br><span class="gradient-text">Philippine Digital Talent</span></h1>
@@ -76,21 +76,21 @@
     </header>
 
     <section class="stats-bar">
-    <div class="stat-item">
-        <span class="stat-number" id="totalCount">0</span>
-        <span class="stat-label">Creatives</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-        <span class="stat-number" id="specialtyCount">0</span>
-        <span class="stat-label">Specialties</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat-item">
-        <span class="stat-number">100%</span>
-        <span class="stat-label">Curated</span>
-    </div>
-</section>
+        <div class="stat-item">
+            <span class="stat-number" id="totalCount">0</span>
+            <span class="stat-label">Creatives</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-number" id="specialtyCount">0</span>
+            <span class="stat-label">Specialties</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Curated</span>
+        </div>
+    </section>
 
     <div class="filter-container">
         <button class="filter-btn active" data-filter="all">All Talent</button>
@@ -99,74 +99,75 @@
         <button class="filter-btn" data-filter="Brand">Brand</button>
         <button class="filter-btn" data-filter="Motion">Motion</button>
         <button class="filter-btn" data-filter="Graphics">Graphics</button>
+        <button class="filter-btn" data-filter="Strategy">Strategy</button>
+        <button class="filter-btn" data-filter="3D">3D</button>
     </div>
 
     <main class="grid-container" id="directory"></main>
 
     <a href="https://forms.gle/z2yKTauF9fc9142w5" target="_blank" class="fab" id="mobileSubmit">
-    <span class="fab-plus">+</span>
-    <div class="fab-text">
-        <span>SUBMIT</span>
-        <span>PROFILE</span>
-    </div>
-</a>
+        <span class="fab-plus">+</span>
+        <div class="fab-text">
+            <span>SUBMIT</span>
+            <span>PROFILE</span>
+        </div>
+    </a>
 
     <section class="pro-cta">
-    <div class="cta-content">
-        <div class="cta-text">
-            <h2>Ready to stand out? 🚀</h2>
-            <p>Get featured at the top of the archive and connect with top brands looking for Filipino talent.</p>
+        <div class="cta-content">
+            <div class="cta-text">
+                <h2>Ready to stand out? 🚀</h2>
+                <p>Get featured at the top of the archive and connect with top brands looking for Filipino talent.</p>
+            </div>
+            <button id="ctaOpenPricing" class="btn-pro">Go Pro Now ✨</button>
         </div>
-        <button id="ctaOpenPricing" class="btn-pro">Go Pro Now ✨</button>
-    </div>
-</section>
+    </section>
 
-<footer>
-    <div class="footer-content">
-        <p>Built with <span>❤️</span> by <a href="https://geanpaulo.com" target="_blank" class="footer-name-link">Gean Paulo</a></p>
-        <div class="footer-links">
-            <a href="javascript:void(0)" id="openAbout">About the Project</a>
-            <a href="https://drive.google.com/drive/folders/1CaWyNSknI_7Dm3tc_gTLcwwP-MDL07Qn?usp=drive_link" target="_blank">Add your Badge</a>
+    <footer>
+        <div class="footer-content">
+            <p>Built with <span>❤️</span> by <a href="https://geanpaulo.com" target="_blank" class="footer-name-link">Gean Paulo</a></p>
+            <div class="footer-links">
+                <a href="javascript:void(0)" id="openAbout">About the Project</a>
+                <a href="https://drive.google.com/drive/folders/1CaWyNSknI_7Dm3tc_gTLcwwP-MDL07Qn?usp=drive_link" target="_blank">Add your Badge</a>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
     <div id="quickView" class="drawer">
-    <div class="drawer-overlay"></div>
-    <div class="drawer-content">
-        <button class="close-drawer">&times;</button>
-        <div id="drawerBody">
-            </div>
-    </div>
-</div>
-
-<div id="aboutModal" class="modal">
-    <div class="modal-content about-modal-adjust">
-        <span class="close-about close-modal">&times;</span>
-        
-        <div class="modal-header">
-            <h2 class="outfit-bold">🇵🇭 PHCREATIVES</h2>
-            <p style="color: var(--accent); margin-top: 5px; font-weight: 500;">The Curated Philippine Archive</p>
+        <div class="drawer-overlay"></div>
+        <div class="drawer-content">
+            <button class="close-drawer">&times;</button>
+            <div id="drawerBody"></div>
         </div>
+    </div>
 
-        <div class="modal-body centered-modal-body">
-            <div class="about-text-content">
-                <p>PHCREATIVES is a high-visibility archive dedicated to showcasing world-class Filipino digital talent. We bridge the gap between local craft and global opportunities.</p>
-                
-                <div class="about-grid-simple">
-                    <div class="about-item">
-                        <h3 class="outfit-semibold">The Mission</h3>
-                        <p>To provide a stage for designers and developers to showcase their craft, regardless of social media algorithms.</p>
-                    </div>
-                    <div class="about-item">
-                        <h3 class="outfit-semibold">The Vision</h3>
-                        <p>To become the primary discovery tool for global teams looking to hire the best talent from the Philippines.</p>
+    <div id="aboutModal" class="modal">
+        <div class="modal-content about-modal-adjust">
+            <span class="close-about close-modal">&times;</span>
+            
+            <div class="modal-header">
+                <h2 class="outfit-bold">🇵🇭 PHCREATIVES</h2>
+                <p style="color: var(--accent); margin-top: 5px; font-weight: 500;">The Curated Philippine Archive</p>
+            </div>
+
+            <div class="modal-body centered-modal-body">
+                <div class="about-text-content">
+                    <p>PHCREATIVES is a high-visibility archive dedicated to showcasing world-class Filipino digital talent. We bridge the gap between local craft and global opportunities.</p>
+                    
+                    <div class="about-grid-simple">
+                        <div class="about-item">
+                            <h3 class="outfit-semibold">The Mission</h3>
+                            <p>To provide a stage for designers and developers to showcase their craft, regardless of social media algorithms.</p>
+                        </div>
+                        <div class="about-item">
+                            <h3 class="outfit-semibold">The Vision</h3>
+                            <p>To become the primary discovery tool for global teams looking to hire the best talent from the Philippines.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <script type="module" src="script.js"></script>
 </body>
