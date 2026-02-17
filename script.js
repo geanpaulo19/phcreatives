@@ -33,19 +33,9 @@ const VERIFIED_STAR_SVG = `
 `;
 
 /**
- * UTILITY: Haptic Feedback
- */
-const triggerHaptic = (ms = 10) => {
-    if (window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate(ms);
-    }
-};
-
-/**
  * FEATURE: Filter by Skill (Clickable Badges)
  */
 window.filterBySkill = (skillName) => {
-  triggerHaptic(5); // Tactile tap when clicking a badge
   closeDrawer();
   const targetBtn = Array.from(filterBtns).find(btn =>
     btn.dataset.filter.toLowerCase() === skillName.toLowerCase()
@@ -73,7 +63,7 @@ window.filterBySkill = (skillName) => {
  * FEATURE: Automated Expiry Logic
  */
 function isUserPro(person) {
-  if (!person || !person.expiryDate) {
+  if (!person.expiryDate) {
     return false;
   }
   const today = new Date();
@@ -137,8 +127,6 @@ function renderCards(data) {
   currentFilteredData = data;
   counter.innerText = `Showcasing ${data.length} curated Filipino creatives`;
 
-  directory.innerHTML = '';
-
   if (data.length === 0) {
     directory.innerHTML = `
             <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
@@ -150,12 +138,9 @@ function renderCards(data) {
     return;
   }
 
-  const fragment = document.createDocumentFragment();
-
-  data.forEach((person, index) => {
+  directory.innerHTML = data.map((person, index) => {
     const isPro = isUserPro(person);
     const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
-    const uniqueId = person.name.replace(/\s+/g, '-').toLowerCase();
 
     const badgesHTML = person.skills.map(skill =>
       `<button class="badge" style="${getSkillStyle(skill)}; cursor: pointer; border: none; font-family: inherit;" onclick="event.stopPropagation(); window.filterBySkill('${skill}')">${skill}</button>`
@@ -164,50 +149,45 @@ function renderCards(data) {
     const verifiedBadge = isPro ? VERIFIED_STAR_SVG : '';
     const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration" onclick="event.stopPropagation();" class="btn-hire">Work with Me</a>` : '';
 
-    const card = document.createElement('div');
-    card.className = `card ${isPro ? 'is-pro' : ''}`;
-    card.style.animationDelay = `${index * 0.05}s`;
-    card.style.cursor = 'pointer';
-    card.setAttribute('data-index', index);
-
-    card.innerHTML = `
-        <div class="profile-img">
-            <img src="${person.image}" alt="${person.name}" loading="lazy" decoding="async">
-        </div>
-        <div class="badge-container">${badgesHTML}</div>
-        <h3 style="display: flex; align-items: center; gap: 4px;">${person.name} ${verifiedBadge}</h3>
-        <div class="bio-wrapper">
-            <p class="bio">
-                ${person.bio}
-                ${hasLongBio ? `<span class="more-text" id="more-${uniqueId}">${person.longBio}</span>` : ''}
-            </p>
-            ${hasLongBio ? `<button class="read-more-btn" onclick="event.stopPropagation(); toggleBio('${uniqueId}', this)">Read More</button>` : ''}
-        </div>
-        ${hireButton}
-        <div class="social-links">
-            ${person.email ? `<a href="mailto:${person.email}" onclick="event.stopPropagation();" class="social-link-item">email</a>` : ''}
-            ${Object.entries(person.links).slice(0, 2).map(([platform, url]) => `
-                <a href="${url}" target="_blank" onclick="event.stopPropagation();" class="social-link-item">${platform}</a>
-            `).join('')}
-        </div>
-    `;
-
-    fragment.appendChild(card);
-  });
-
-  directory.appendChild(fragment);
+    return `
+            <div class="card ${isPro ? 'is-pro' : ''}" style="animation-delay: ${index * 0.05}s; cursor: pointer;" data-index="${index}">
+                <div class="profile-img"><img src="${person.image}" alt="${person.name}" loading="lazy"></div>
+                <div class="badge-container">${badgesHTML}</div>
+                <h3 style="display: flex; align-items: center; gap: 4px;">${person.name} ${verifiedBadge}</h3>
+                <div class="bio-wrapper">
+                    <p class="bio">
+                        ${person.bio}
+                        ${hasLongBio ? `<span class="more-text" id="more-${index}">${person.longBio}</span>` : ''}
+                    </p>
+                    ${hasLongBio ? `<button class="read-more-btn" onclick="event.stopPropagation(); toggleBio(${index}, this)">Read More</button>` : ''}
+                </div>
+                ${hireButton}
+                <div class="social-links">
+                    ${person.email ? `<a href="mailto:${person.email}" onclick="event.stopPropagation();" class="social-link-item">email</a>` : ''}
+                    ${Object.entries(person.links).slice(0, 2).map(([platform, url]) => `
+                        <a href="${url}" target="_blank" onclick="event.stopPropagation();" class="social-link-item">${platform}</a>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+  }).join('');
 }
 
 /**
  * Unified Quick View (Bottom Sheet)
  */
 function openQuickView(person) {
-  if (!drawer || !drawerBody) return;
-
-  triggerHaptic(15); // Distinct vibration when opening a profile
+  if (!drawer || !drawerBody) {
+    return;
+  }
 
   const isPro = isUserPro(person);
-  drawerContent.classList.toggle('is-pro', isPro);
+
+  if (isPro) {
+    drawerContent.classList.add('is-pro');
+  } else {
+    drawerContent.classList.remove('is-pro');
+  }
 
   const featuredLinks = isPro ? (person.featuredWork || []) : (person.featuredWork ? person.featuredWork.slice(0, 5) : []);
 
@@ -275,7 +255,7 @@ const closeDrawer = () => {
 };
 
 /**
- * Swipe-to-Close
+ * Swipe-to-Close (Now active for both Mobile and Desktop)
  */
 let touchStartY = 0;
 if (drawerContent) {
@@ -287,6 +267,7 @@ if (drawerContent) {
 
   drawerContent.addEventListener('touchend', (e) => {
     const touchEndY = e.changedTouches[0].clientY;
+    // If swipe down is > 100px and user is at top of scrollable content
     if (touchEndY - touchStartY > 100 && drawerContent.scrollTop <= 0) {
       closeDrawer();
     }
@@ -295,9 +276,8 @@ if (drawerContent) {
   });
 }
 
-window.toggleBio = (uniqueId, btn) => {
-  triggerHaptic(5); // Light tap on read more
-  const moreText = document.getElementById(`more-${uniqueId}`);
+window.toggleBio = (index, btn) => {
+  const moreText = document.getElementById(`more-${index}`);
   if (moreText) {
     const isExpanded = moreText.classList.toggle('visible');
     btn.innerText = isExpanded ? "Read Less" : "Read More";
@@ -327,11 +307,9 @@ function filterGallery() {
 }
 
 window.clearSearch = () => {
-  triggerHaptic(10); // Tap when resetting everything
   searchInput.value = '';
   filterBtns.forEach(b => b.classList.remove('active'));
-  const allBtn = document.querySelector('[data-filter="all"]');
-  if (allBtn) allBtn.classList.add('active');
+  document.querySelector('[data-filter="all"]').classList.add('active');
   filterGallery();
 };
 
@@ -344,9 +322,9 @@ searchInput.addEventListener('input', () => {
 filterBtns.forEach(btn => {
   btn.addEventListener('click', (e) => {
     e.preventDefault();
-    if (btn.classList.contains('active')) return;
-    
-    triggerHaptic(5); // Tap when switching category
+    if (btn.classList.contains('active')) {
+      return;
+    }
     filterBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     requestAnimationFrame(() => {
@@ -366,28 +344,44 @@ directory.addEventListener('click', (e) => {
   }
 });
 
-if (closeDrawerBtn) closeDrawerBtn.onclick = closeDrawer;
-if (drawerOverlay) drawerOverlay.onclick = closeDrawer;
+if (closeDrawerBtn) {
+  closeDrawerBtn.onclick = closeDrawer;
+}
+if (drawerOverlay) {
+  drawerOverlay.onclick = closeDrawer;
+}
 
 function initFooterObserver() {
   const fab = document.querySelector('.fab');
   const footer = document.querySelector('footer');
-  if (!fab || !footer) return;
+  if (!fab || !footer) {
+    return;
+  }
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      fab.classList.toggle('fab-hidden', entry.isIntersecting);
+      if (entry.isIntersecting) {
+        fab.classList.add('fab-hidden');
+      } else {
+        fab.classList.remove('fab-hidden');
+      }
     });
-  }, { threshold: 0.1 });
+  }, {
+    threshold: 0.1
+  });
   observer.observe(footer);
 }
 
 function animateValue(obj, start, end, duration) {
   let startTimestamp = null;
   const step = (timestamp) => {
-    if (!startTimestamp) startTimestamp = timestamp;
+    if (!startTimestamp) {
+      startTimestamp = timestamp;
+    }
     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
     obj.innerHTML = Math.floor(progress * (end - start) + start);
-    if (progress < 1) window.requestAnimationFrame(step);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
   };
   window.requestAnimationFrame(step);
 }
@@ -406,7 +400,9 @@ function initializeGallery() {
     const totalCountEl = document.getElementById('totalCount');
     const specialtyCountEl = document.getElementById('specialtyCount');
 
-    if (totalCountEl) animateValue(totalCountEl, 0, displayedCreatives.length, 1200);
+    if (totalCountEl) {
+      animateValue(totalCountEl, 0, displayedCreatives.length, 1200);
+    }
     if (specialtyCountEl) {
       setTimeout(() => {
         animateValue(specialtyCountEl, 0, uniqueSpecialties, 1000);
@@ -423,38 +419,69 @@ function initializeGallery() {
 function initStickyObserver() {
   const filterContainer = document.querySelector('.filter-container');
   const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1), {
-    threshold: [0.99],
+    threshold: [1],
     rootMargin: '0px'
   });
-  if (filterContainer) observer.observe(filterContainer);
+  if (filterContainer) {
+    observer.observe(filterContainer);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', initializeGallery);
 
-// Modal Logic
 const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
 const closeModalBtn = document.querySelector(".close-modal");
 
-const openModal = () => { triggerHaptic(10); if (modal) modal.style.display = "flex"; };
-const closeModal = () => { if (modal) modal.style.display = "none"; };
+const openModal = () => {
+  if (modal) {
+    modal.style.display = "flex";
+  }
+};
+const closeModal = () => {
+  if (modal) {
+    modal.style.display = "none";
+  }
+};
 
-if (openModalBtn) openModalBtn.onclick = openModal;
-if (ctaOpenModalBtn) ctaOpenModalBtn.onclick = openModal;
-if (closeModalBtn) closeModalBtn.onclick = closeModal;
+if (openModalBtn) {
+  openModalBtn.onclick = openModal;
+}
+if (ctaOpenModalBtn) {
+  ctaOpenModalBtn.onclick = openModal;
+}
+if (closeModalBtn) {
+  closeModalBtn.onclick = closeModal;
+}
 
 const aboutModal = document.getElementById("aboutModal");
 const openAboutBtn = document.getElementById("openAbout");
 const closeAboutBtn = document.querySelector(".close-about");
 
-const openAbout = () => { triggerHaptic(10); if (aboutModal) aboutModal.style.display = "flex"; };
-const closeAbout = () => { if (aboutModal) aboutModal.style.display = "none"; };
+const openAbout = () => {
+  if (aboutModal) {
+    aboutModal.style.display = "flex";
+  }
+};
+const closeAbout = () => {
+  if (aboutModal) {
+    aboutModal.style.display = "none";
+  }
+};
 
-if (openAboutBtn) openAboutBtn.onclick = openAbout;
-if (closeAboutBtn) closeAboutBtn.onclick = closeAbout;
+if (openAboutBtn) {
+  openAboutBtn.onclick = openAbout;
+}
+if (closeAboutBtn) {
+  closeAboutBtn.onclick = closeAbout;
+}
 
 window.addEventListener('click', (event) => {
-  if (event.target === modal) closeModal();
-  if (event.target === aboutModal) closeAbout();
+  if (event.target === modal) {
+    closeModal();
+  }
+  if (event.target === aboutModal) {
+    closeAbout();
+  }
 });
