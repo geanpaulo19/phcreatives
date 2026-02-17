@@ -1,4 +1,6 @@
-import { creatives } from './creatives.js';
+import {
+  creatives
+} from './creatives.js';
 
 const directory = document.getElementById('directory');
 const searchInput = document.getElementById('search');
@@ -13,73 +15,97 @@ const closeDrawerBtn = document.querySelector('.close-drawer');
 const drawerOverlay = document.querySelector('.drawer-overlay');
 
 let displayedCreatives = [];
-let currentFilteredData = []; 
+let currentFilteredData = [];
 
-// Reusable SVG Star Component (Updated to Gold)
+// Reusable SVG Star Component
 const VERIFIED_STAR_SVG = `
-    <svg class="verified-star" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: #FFD700; display: inline-block; vertical-align: middle; margin-left: 6px; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4));">
+    <svg 
+        class="verified-star" 
+        xmlns="http://www.w3.org/2000/svg" 
+        width="18" 
+        height="18" 
+        viewBox="0 0 24 24" 
+        fill="currentColor" 
+        style="color: #FFD700; display: inline-block; vertical-align: middle; margin-left: 6px; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4));"
+    >
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
     </svg>
 `;
 
 /**
+ * UTILITY: Haptic Feedback
+ */
+const triggerHaptic = (ms = 10) => {
+    if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(ms);
+    }
+};
+
+/**
  * FEATURE: Filter by Skill (Clickable Badges)
  */
 window.filterBySkill = (skillName) => {
-    closeDrawer();
-    const targetBtn = Array.from(filterBtns).find(btn => 
-        btn.dataset.filter.toLowerCase() === skillName.toLowerCase()
-    );
+  triggerHaptic(5); // Tactile tap when clicking a badge
+  closeDrawer();
+  const targetBtn = Array.from(filterBtns).find(btn =>
+    btn.dataset.filter.toLowerCase() === skillName.toLowerCase()
+  );
 
-    if (targetBtn) {
-        searchInput.value = '';
-        filterBtns.forEach(b => b.classList.remove('active'));
-        targetBtn.classList.add('active');
-        filterGallery();
+  if (targetBtn) {
+    searchInput.value = '';
+    filterBtns.forEach(b => b.classList.remove('active'));
+    targetBtn.classList.add('active');
+    filterGallery();
 
-        // Prevent jitter by scrolling after render
-        requestAnimationFrame(() => {
-            const header = document.querySelector('header');
-            if (header) header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    requestAnimationFrame(() => {
+      const header = document.querySelector('header');
+      if (header) {
+        header.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
         });
-    }
+      }
+    });
+  }
 };
 
 /**
  * FEATURE: Automated Expiry Logic
  */
 function isUserPro(person) {
-    if (!person.expiryDate) return false;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const [year, month, day] = person.expiryDate.split('-').map(Number);
-    const expiry = new Date(year, month - 1, day); 
-    expiry.setHours(0, 0, 0, 0);
-    return expiry >= today;
+  if (!person || !person.expiryDate) {
+    return false;
+  }
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const [year, month, day] = person.expiryDate.split('-').map(Number);
+  const expiry = new Date(year, month - 1, day);
+  expiry.setHours(0, 0, 0, 0);
+  return expiry >= today;
 }
 
 function shuffle(array) {
-    let currentIndex = array.length, randomIndex;
-    while (currentIndex != 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-    return array;
+  let currentIndex = array.length;
+  let randomIndex;
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+  return array;
 }
 
 function getSkillStyle(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    const h = Math.abs(hash * 137.5) % 360; 
-    return `background: hsla(${h}, 95%, 75%, 0.12); color: hsl(${h}, 95%, 75%); border: 1px solid hsla(${h}, 95%, 75%, 0.4); text-shadow: 0 0 8px hsla(${h}, 95%, 75%, 0.25);`;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = Math.abs(hash * 137.5) % 360;
+  return `background: hsla(${h}, 95%, 75%, 0.12); color: hsl(${h}, 95%, 75%); border: 1px solid hsla(${h}, 95%, 75%, 0.4); text-shadow: 0 0 8px hsla(${h}, 95%, 75%, 0.25);`;
 }
 
-/**
- * FEATURE: Skeleton Loader Template
- */
 function showSkeletons() {
-    directory.innerHTML = Array(8).fill(0).map(() => `
+  directory.innerHTML = Array(8).fill(0).map(() => `
         <div class="skeleton-card">
             <div class="skeleton-img"></div>
             <div class="skeleton-line"></div>
@@ -89,98 +115,103 @@ function showSkeletons() {
     `).join('');
 }
 
-/**
- * FEATURE: Update Filter Button Counts
- */
 function updateFilterCounts() {
-    filterBtns.forEach(btn => {
-        const filter = btn.dataset.filter;
-        let count = 0;
-        if (filter === 'all') {
-            count = displayedCreatives.length;
-        } else {
-            count = displayedCreatives.filter(p => 
-                p.skills.some(s => s.toLowerCase() === filter.toLowerCase())
-            ).length;
-        }
-        
-        const label = btn.getAttribute('data-label') || btn.innerText;
-        btn.setAttribute('data-label', label);
-        btn.innerText = `${label} (${count})`;
-    });
+  filterBtns.forEach(btn => {
+    const filter = btn.dataset.filter;
+    let count = 0;
+    if (filter === 'all') {
+      count = displayedCreatives.length;
+    } else {
+      count = displayedCreatives.filter(p =>
+        p.skills.some(s => s.toLowerCase() === filter.toLowerCase())
+      ).length;
+    }
+
+    const label = btn.getAttribute('data-label') || btn.innerText;
+    btn.setAttribute('data-label', label);
+    btn.innerText = `${label} (${count})`;
+  });
 }
 
-/**
- * Renders the creative cards
- */
 function renderCards(data) {
-    currentFilteredData = data; 
-    counter.innerText = `Showcasing ${data.length} curated Filipino creatives`;
+  currentFilteredData = data;
+  counter.innerText = `Showcasing ${data.length} curated Filipino creatives`;
 
-    if (data.length === 0) {
-        directory.innerHTML = `
+  directory.innerHTML = '';
+
+  if (data.length === 0) {
+    directory.innerHTML = `
             <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
                 <p style="font-size: 1.1rem; color: var(--text-dim); margin-bottom: 1.5rem;">No creatives found matching that search.</p>
                 <button onclick="window.clearSearch()" style="background: none; border: 1px solid var(--accent); color: var(--accent); padding: 10px 24px; border-radius: 12px; cursor: pointer; font-family: inherit; transition: all 0.3s ease;">
                     Clear Search & Filters
                 </button>
             </div>`;
-        return;
-    }
+    return;
+  }
 
-    directory.innerHTML = data.map((person, index) => {
-        const isPro = isUserPro(person);
-        const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
-        
-        const badgesHTML = person.skills.map(skill => 
-            `<button class="badge" style="${getSkillStyle(skill)}; cursor: pointer; border: none; font-family: inherit;" onclick="event.stopPropagation(); window.filterBySkill('${skill}')">${skill}</button>`
-        ).join('');
-        
-        const verifiedBadge = isPro ? VERIFIED_STAR_SVG : '';
-        const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration" onclick="event.stopPropagation();" class="btn-hire">Work with Me</a>` : '';
+  const fragment = document.createDocumentFragment();
 
-        return `
-            <div class="card ${isPro ? 'is-pro' : ''}" style="animation-delay: ${index * 0.05}s; cursor: pointer;" data-index="${index}">
-                <div class="profile-img"><img src="${person.image}" alt="${person.name}" loading="lazy"></div>
-                <div class="badge-container">${badgesHTML}</div>
-                <h3 style="display: flex; align-items: center; gap: 4px;">${person.name} ${verifiedBadge}</h3>
-                <div class="bio-wrapper">
-                    <p class="bio">
-                        ${person.bio}
-                        ${hasLongBio ? `<span class="more-text" id="more-${index}">${person.longBio}</span>` : ''}
-                    </p>
-                    ${hasLongBio ? `<button class="read-more-btn" onclick="event.stopPropagation(); toggleBio(${index}, this)">Read More</button>` : ''}
-                </div>
-                ${hireButton}
-                <div class="social-links">
-                    ${person.email ? `<a href="mailto:${person.email}" onclick="event.stopPropagation();" class="social-link-item">email</a>` : ''}
-                    ${Object.entries(person.links).slice(0, 2).map(([platform, url]) => `
-                        <a href="${url}" target="_blank" onclick="event.stopPropagation();" class="social-link-item">${platform}</a>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-    }).join('');
+  data.forEach((person, index) => {
+    const isPro = isUserPro(person);
+    const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
+    const uniqueId = person.name.replace(/\s+/g, '-').toLowerCase();
+
+    const badgesHTML = person.skills.map(skill =>
+      `<button class="badge" style="${getSkillStyle(skill)}; cursor: pointer; border: none; font-family: inherit;" onclick="event.stopPropagation(); window.filterBySkill('${skill}')">${skill}</button>`
+    ).join('');
+
+    const verifiedBadge = isPro ? VERIFIED_STAR_SVG : '';
+    const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration" onclick="event.stopPropagation();" class="btn-hire">Work with Me</a>` : '';
+
+    const card = document.createElement('div');
+    card.className = `card ${isPro ? 'is-pro' : ''}`;
+    card.style.animationDelay = `${index * 0.05}s`;
+    card.style.cursor = 'pointer';
+    card.setAttribute('data-index', index);
+
+    card.innerHTML = `
+        <div class="profile-img">
+            <img src="${person.image}" alt="${person.name}" loading="lazy" decoding="async">
+        </div>
+        <div class="badge-container">${badgesHTML}</div>
+        <h3 style="display: flex; align-items: center; gap: 4px;">${person.name} ${verifiedBadge}</h3>
+        <div class="bio-wrapper">
+            <p class="bio">
+                ${person.bio}
+                ${hasLongBio ? `<span class="more-text" id="more-${uniqueId}">${person.longBio}</span>` : ''}
+            </p>
+            ${hasLongBio ? `<button class="read-more-btn" onclick="event.stopPropagation(); toggleBio('${uniqueId}', this)">Read More</button>` : ''}
+        </div>
+        ${hireButton}
+        <div class="social-links">
+            ${person.email ? `<a href="mailto:${person.email}" onclick="event.stopPropagation();" class="social-link-item">email</a>` : ''}
+            ${Object.entries(person.links).slice(0, 2).map(([platform, url]) => `
+                <a href="${url}" target="_blank" onclick="event.stopPropagation();" class="social-link-item">${platform}</a>
+            `).join('')}
+        </div>
+    `;
+
+    fragment.appendChild(card);
+  });
+
+  directory.appendChild(fragment);
 }
 
 /**
- * Quick View Logic
+ * Unified Quick View (Bottom Sheet)
  */
 function openQuickView(person) {
-    if (!drawer || !drawerBody) return;
+  if (!drawer || !drawerBody) return;
 
-    const isPro = isUserPro(person);
-    
-    if (isPro) {
-        drawerContent.classList.add('is-pro');
-    } else {
-        drawerContent.classList.remove('is-pro');
-    }
+  triggerHaptic(15); // Distinct vibration when opening a profile
 
-    // UPDATED FEATURE: Logic for Featured Project Links (5 for Free, Unlimited for Pro)
-    const featuredLinks = isPro ? (person.featuredWork || []) : (person.featuredWork ? person.featuredWork.slice(0, 5) : []);
-    
-    const linksHTML = featuredLinks.length > 0 ? `
+  const isPro = isUserPro(person);
+  drawerContent.classList.toggle('is-pro', isPro);
+
+  const featuredLinks = isPro ? (person.featuredWork || []) : (person.featuredWork ? person.featuredWork.slice(0, 5) : []);
+
+  const linksHTML = featuredLinks.length > 0 ? `
         <div class="drawer-section">
             <p class="drawer-section-title">Featured Projects</p>
             <div class="work-link-list">
@@ -194,7 +225,7 @@ function openQuickView(person) {
         </div>
     ` : '';
 
-    drawerBody.innerHTML = `
+  drawerBody.innerHTML = `
         <div class="drawer-header">
             <img src="${person.image}" alt="${person.name}" class="drawer-img">
             <h2 class="drawer-name" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -233,189 +264,169 @@ function openQuickView(person) {
             Hire ${person.name.split(' ')[0]}
         </a>
     `;
-    
-    drawer.classList.add('is-open');
-    document.body.style.overflow = 'hidden'; 
+
+  drawer.classList.add('is-open');
+  document.body.style.overflow = 'hidden';
 }
 
 const closeDrawer = () => {
-    drawer.classList.remove('is-open');
-    document.body.style.overflow = 'auto';
+  drawer.classList.remove('is-open');
+  document.body.style.overflow = 'auto';
 };
 
 /**
- * Mobile Swipe-to-Close
+ * Swipe-to-Close
  */
 let touchStartY = 0;
 if (drawerContent) {
-    drawerContent.addEventListener('touchstart', (e) => {
-        touchStartY = e.touches[0].clientY;
-    }, { passive: true });
+  drawerContent.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, {
+    passive: true
+  });
 
-    drawerContent.addEventListener('touchend', (e) => {
-        const touchEndY = e.changedTouches[0].clientY;
-        if (touchEndY - touchStartY > 100 && drawerContent.scrollTop <= 0) {
-            closeDrawer();
-        }
-    }, { passive: true });
+  drawerContent.addEventListener('touchend', (e) => {
+    const touchEndY = e.changedTouches[0].clientY;
+    if (touchEndY - touchStartY > 100 && drawerContent.scrollTop <= 0) {
+      closeDrawer();
+    }
+  }, {
+    passive: true
+  });
 }
 
-window.toggleBio = (index, btn) => {
-    const moreText = document.getElementById(`more-${index}`);
-    if (moreText) {
-        const isExpanded = moreText.classList.toggle('visible');
-        btn.innerText = isExpanded ? "Read Less" : "Read More";
-    }
+window.toggleBio = (uniqueId, btn) => {
+  triggerHaptic(5); // Light tap on read more
+  const moreText = document.getElementById(`more-${uniqueId}`);
+  if (moreText) {
+    const isExpanded = moreText.classList.toggle('visible');
+    btn.innerText = isExpanded ? "Read Less" : "Read More";
+  }
 };
 
 function filterGallery() {
-    const query = searchInput.value.toLowerCase().trim();
-    const activeBtn = document.querySelector('.filter-btn.active');
-    const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
+  const query = searchInput.value.toLowerCase().trim();
+  const activeBtn = document.querySelector('.filter-btn.active');
+  const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
 
-    const filtered = displayedCreatives.filter(person => {
-        // Expanded search logic to include Location and Experience
-        const matchesSearch = 
-            person.name.toLowerCase().includes(query) || 
-            person.bio.toLowerCase().includes(query) ||
-            (person.longBio && person.longBio.toLowerCase().includes(query)) ||
-            person.skills.some(s => s.toLowerCase().includes(query)) ||
-            // New: Search by Location (e.g., "Manila", "Cebu", "Remote")
-            (person.location && person.location.toLowerCase().includes(query)) ||
-            // New: Search by Experience (e.g., "5", "5 years")
-            (person.experience && person.experience.toString().includes(query));
+  const filtered = displayedCreatives.filter(person => {
+    const matchesSearch =
+      person.name.toLowerCase().includes(query) ||
+      person.bio.toLowerCase().includes(query) ||
+      (person.longBio && person.longBio.toLowerCase().includes(query)) ||
+      person.skills.some(s => s.toLowerCase().includes(query)) ||
+      (person.location && person.location.toLowerCase().includes(query)) ||
+      (person.experience && person.experience.toString().includes(query));
 
-        let matchesFilter = activeFilter === 'all' || person.skills.some(skill => skill.toLowerCase() === activeFilter.toLowerCase());
-        
-        return matchesSearch && matchesFilter;
-    });
+    let matchesFilter = activeFilter === 'all' || person.skills.some(skill => skill.toLowerCase() === activeFilter.toLowerCase());
 
-    renderCards(filtered);
+    return matchesSearch && matchesFilter;
+  });
+
+  renderCards(filtered);
 }
 
 window.clearSearch = () => {
-    searchInput.value = '';
-    filterBtns.forEach(b => b.classList.remove('active'));
-    document.querySelector('[data-filter="all"]').classList.add('active');
-    filterGallery();
+  triggerHaptic(10); // Tap when resetting everything
+  searchInput.value = '';
+  filterBtns.forEach(b => b.classList.remove('active'));
+  const allBtn = document.querySelector('[data-filter="all"]');
+  if (allBtn) allBtn.classList.add('active');
+  filterGallery();
 };
 
-// Event Listeners
 let searchTimeout;
 searchInput.addEventListener('input', () => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(filterGallery, 150);
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(filterGallery, 150);
 });
 
 filterBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        // Prevent default behavior that might cause page jumps
-        e.preventDefault();
-        
-        if(btn.classList.contains('active')) return;
-
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Use requestAnimationFrame to ensure the animation starts 
-        // before the heavy rendering of cards begins
-        requestAnimationFrame(() => {
-            filterGallery();
-        });
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (btn.classList.contains('active')) return;
+    
+    triggerHaptic(5); // Tap when switching category
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    requestAnimationFrame(() => {
+      filterGallery();
     });
+  });
 });
 
 directory.addEventListener('click', (e) => {
-    const card = e.target.closest('.card');
-    if (!card || e.target.closest('.btn-hire') || e.target.closest('.social-links') || e.target.closest('.read-more-btn') || e.target.closest('.badge')) return;
-    const index = card.getAttribute('data-index');
-    if (currentFilteredData[index]) openQuickView(currentFilteredData[index]);
+  const card = e.target.closest('.card');
+  if (!card || e.target.closest('.btn-hire') || e.target.closest('.social-links') || e.target.closest('.read-more-btn') || e.target.closest('.badge')) {
+    return;
+  }
+  const index = card.getAttribute('data-index');
+  if (currentFilteredData[index]) {
+    openQuickView(currentFilteredData[index]);
+  }
 });
 
 if (closeDrawerBtn) closeDrawerBtn.onclick = closeDrawer;
 if (drawerOverlay) drawerOverlay.onclick = closeDrawer;
 
-/**
- * FEATURE: Mobile FAB Fade-out
- */
 function initFooterObserver() {
-    const fab = document.querySelector('.fab');
-    const footer = document.querySelector('footer');
-    
-    if (!fab || !footer) return;
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                fab.classList.add('fab-hidden');
-            } else {
-                fab.classList.remove('fab-hidden');
-            }
-        });
-    }, { threshold: 0.1 });
-
-    observer.observe(footer);
+  const fab = document.querySelector('.fab');
+  const footer = document.querySelector('footer');
+  if (!fab || !footer) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      fab.classList.toggle('fab-hidden', entry.isIntersecting);
+    });
+  }, { threshold: 0.1 });
+  observer.observe(footer);
 }
 
-/**
- * Helper: Smooth Counter Animation
- */
 function animateValue(obj, start, end, duration) {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        obj.innerHTML = Math.floor(progress * (end - start) + start);
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        }
-    };
-    window.requestAnimationFrame(step);
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    obj.innerHTML = Math.floor(progress * (end - start) + start);
+    if (progress < 1) window.requestAnimationFrame(step);
+  };
+  window.requestAnimationFrame(step);
 }
 
-/**
- * Initial Initialization
- */
 function initializeGallery() {
-    showSkeletons(); 
+  showSkeletons();
+  setTimeout(() => {
+    const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
+    const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
 
-    setTimeout(() => {
-        const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
-        const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
+    displayedCreatives = [...activePros, ...regulars];
 
-        displayedCreatives = [...activePros, ...regulars]; 
+    const allSkills = displayedCreatives.flatMap(p => p.skills);
+    const uniqueSpecialties = [...new Set(allSkills)].length;
 
-        // 1. Calculate Unique Specialties
-        // Flattens all skills arrays into one and gets unique values
-        const allSkills = displayedCreatives.flatMap(p => p.skills);
-        const uniqueSpecialties = [...new Set(allSkills)].length;
+    const totalCountEl = document.getElementById('totalCount');
+    const specialtyCountEl = document.getElementById('specialtyCount');
 
-        // 2. Trigger Counter Animations
-        const totalCountEl = document.getElementById('totalCount');
-        const specialtyCountEl = document.getElementById('specialtyCount');
+    if (totalCountEl) animateValue(totalCountEl, 0, displayedCreatives.length, 1200);
+    if (specialtyCountEl) {
+      setTimeout(() => {
+        animateValue(specialtyCountEl, 0, uniqueSpecialties, 1000);
+      }, 200);
+    }
 
-        if (totalCountEl) {
-            animateValue(totalCountEl, 0, displayedCreatives.length, 1200);
-        }
-        
-        if (specialtyCountEl) {
-            // Delay the specialty count slightly for a staggered effect
-            setTimeout(() => {
-                animateValue(specialtyCountEl, 0, uniqueSpecialties, 1000);
-            }, 200);
-        }
-
-        renderCards(displayedCreatives);
-        updateFilterCounts(); 
-        initStickyObserver();
-        initFooterObserver(); 
-    }, 800);
+    renderCards(displayedCreatives);
+    updateFilterCounts();
+    initStickyObserver();
+    initFooterObserver();
+  }, 800);
 }
 
 function initStickyObserver() {
-    const filterContainer = document.querySelector('.filter-container');
-    const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1), { threshold: [1], rootMargin: '0px' });
-    if (filterContainer) observer.observe(filterContainer);
+  const filterContainer = document.querySelector('.filter-container');
+  const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1), {
+    threshold: [0.99],
+    rootMargin: '0px'
+  });
+  if (filterContainer) observer.observe(filterContainer);
 }
 
 document.addEventListener('DOMContentLoaded', initializeGallery);
@@ -426,29 +437,24 @@ const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
 const closeModalBtn = document.querySelector(".close-modal");
 
-const openModal = () => { if (modal) modal.style.display = "flex"; };
+const openModal = () => { triggerHaptic(10); if (modal) modal.style.display = "flex"; };
 const closeModal = () => { if (modal) modal.style.display = "none"; };
 
 if (openModalBtn) openModalBtn.onclick = openModal;
 if (ctaOpenModalBtn) ctaOpenModalBtn.onclick = openModal;
 if (closeModalBtn) closeModalBtn.onclick = closeModal;
 
-window.onclick = (event) => { if (event.target === modal) closeModal(); };
-
-// About Modal Elements
 const aboutModal = document.getElementById("aboutModal");
-const openAboutBtn = document.getElementById("openAbout"); 
+const openAboutBtn = document.getElementById("openAbout");
 const closeAboutBtn = document.querySelector(".close-about");
 
-const openAbout = () => { if (aboutModal) aboutModal.style.display = "flex"; };
+const openAbout = () => { triggerHaptic(10); if (aboutModal) aboutModal.style.display = "flex"; };
 const closeAbout = () => { if (aboutModal) aboutModal.style.display = "none"; };
 
 if (openAboutBtn) openAboutBtn.onclick = openAbout;
 if (closeAboutBtn) closeAboutBtn.onclick = closeAbout;
 
-// Update your existing window.onclick to include aboutModal
 window.addEventListener('click', (event) => {
-    const pricingModal = document.getElementById("pricingModal");
-    if (event.target === pricingModal) pricingModal.style.display = "none";
-    if (event.target === aboutModal) closeAbout();
+  if (event.target === modal) closeModal();
+  if (event.target === aboutModal) closeAbout();
 });
