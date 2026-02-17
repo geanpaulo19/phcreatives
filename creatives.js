@@ -9,12 +9,12 @@ export const creatives = [
         longBio: "With over 5 years of experience in the Philippine tech scene, I specialize in building bridges between complex backend logic and intuitive user interfaces. I've helped startups scale from zero to one by focusing on clean code and pixel-perfect design systems.",
         image: "images/gean.jpg",
         featuredWork: [
-            { title: "Portfolio 2024", url: "https://geanpaulo.com/" },
-            { title: "E-commerce Design System", url: "#" },
-            { title: "Fintech Dashboard Mobile", url: "#" },
-            { title: "Brand Identity - TechStart", url: "#" },
-            { title: "Open Source CSS Library", url: "https://github.com/geanpaulo19" },
-            { title: "UI Kit for SaaS", url: "#" }
+            { title: "Portfolio 2026", url: "https://geanpaulo.com/" },
+            { title: "Always Ascending", url: "https://alwaysascending.store/" },
+            { title: "Zen New Tab", url: "https://chromewebstore.google.com/detail/chhlgdhacpabpphphdhjicnpbpklpdbk?utm_source=item-share-cb" },
+            { title: "Finetouch Maintenance", url: "https://finetouchmaintenance.com/" },
+            { title: "In the Dog House Texas", url: "https://www.inthedoghousetx.com/" },
+            { title: "PayPal Fees Calculator", url: "https://ppfees.netlify.app/" }
         ],
         links: { website: "https://geanpaulo.com/", github: "https://github.com/geanpaulo19" },
         expiryDate: "2030-02-17" 
