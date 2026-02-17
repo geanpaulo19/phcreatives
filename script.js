@@ -177,13 +177,12 @@ function openQuickView(person) {
         drawerContent.classList.remove('is-pro');
     }
 
-    // Logic for Featured Project Links
-    const maxLinks = isPro ? 6 : 3;
-    const featuredLinks = person.featuredWork ? person.featuredWork.slice(0, maxLinks) : [];
+    // UPDATED FEATURE: Logic for Featured Project Links (5 for Free, Unlimited for Pro)
+    const featuredLinks = isPro ? (person.featuredWork || []) : (person.featuredWork ? person.featuredWork.slice(0, 5) : []);
     
     const linksHTML = featuredLinks.length > 0 ? `
         <div class="drawer-section">
-            <p class="drawer-section-title">Featured Projects ${!isPro && person.featuredWork.length > 3 ? '<span style="float:right; font-size: 0.65rem; opacity: 0.5;">Free Tier: 3 Link Limit</span>' : ''}</p>
+            <p class="drawer-section-title">Featured Projects</p>
             <div class="work-link-list">
                 ${featuredLinks.map(link => `
                     <a href="${link.url}" target="_blank" class="work-link-item">
