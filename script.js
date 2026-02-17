@@ -23,6 +23,29 @@ const VERIFIED_STAR_SVG = `
 `;
 
 /**
+ * FEATURE: Filter by Skill (Clickable Badges)
+ */
+window.filterBySkill = (skillName) => {
+    closeDrawer();
+    const targetBtn = Array.from(filterBtns).find(btn => 
+        btn.dataset.filter.toLowerCase() === skillName.toLowerCase()
+    );
+
+    if (targetBtn) {
+        searchInput.value = '';
+        filterBtns.forEach(b => b.classList.remove('active'));
+        targetBtn.classList.add('active');
+        filterGallery();
+
+        // Prevent jitter by scrolling after render
+        requestAnimationFrame(() => {
+            const header = document.querySelector('header');
+            if (header) header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+};
+
+/**
  * FEATURE: Automated Expiry Logic
  */
 function isUserPro(person) {
@@ -108,10 +131,12 @@ function renderCards(data) {
     directory.innerHTML = data.map((person, index) => {
         const isPro = isUserPro(person);
         const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
-        const badgesHTML = person.skills.map(skill => `<span class="badge" style="${getSkillStyle(skill)}">${skill}</span>`).join('');
+        
+        const badgesHTML = person.skills.map(skill => 
+            `<button class="badge" style="${getSkillStyle(skill)}; cursor: pointer; border: none; font-family: inherit;" onclick="event.stopPropagation(); window.filterBySkill('${skill}')">${skill}</button>`
+        ).join('');
         
         const verifiedBadge = isPro ? VERIFIED_STAR_SVG : '';
-        // Fixed: Added stopPropagation to hire button
         const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration" onclick="event.stopPropagation();" class="btn-hire">Work with Me</a>` : '';
 
         return `
@@ -152,6 +177,24 @@ function openQuickView(person) {
         drawerContent.classList.remove('is-pro');
     }
 
+    // Logic for Featured Project Links
+    const maxLinks = isPro ? 6 : 3;
+    const featuredLinks = person.featuredWork ? person.featuredWork.slice(0, maxLinks) : [];
+    
+    const linksHTML = featuredLinks.length > 0 ? `
+        <div class="drawer-section">
+            <p class="drawer-section-title">Featured Projects ${!isPro && person.featuredWork.length > 3 ? '<span style="float:right; font-size: 0.65rem; opacity: 0.5;">Free Tier: 3 Link Limit</span>' : ''}</p>
+            <div class="work-link-list">
+                ${featuredLinks.map(link => `
+                    <a href="${link.url}" target="_blank" class="work-link-item">
+                        <span>${link.title}</span>
+                        <span class="link-icon">↗</span>
+                    </a>
+                `).join('')}
+            </div>
+        </div>
+    ` : '';
+
     drawerBody.innerHTML = `
         <div class="drawer-header">
             <img src="${person.image}" alt="${person.name}" class="drawer-img">
@@ -159,17 +202,25 @@ function openQuickView(person) {
                 ${person.name} 
                 ${isPro ? VERIFIED_STAR_SVG.replace('width="18" height="18"', 'width="24" height="24"') : ''}
             </h2>
-            <div class="badge-container" style="justify-content: center; mask-image: none; -webkit-mask-image: none; overflow: visible; flex-wrap: wrap;">
-                ${person.skills.map(s => `<span class="badge" style="${getSkillStyle(s)}">${s}</span>`).join('')}
+
+            <div class="drawer-stats" style="display: flex; justify-content: center; gap: 24px; margin: 1rem 0; padding: 1rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+                <div class="stat-item" style="text-align: center;"><span style="display: block; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Location</span><b>${person.location || 'Remote'}</b></div>
+                <div class="stat-item" style="text-align: center;"><span style="display: block; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Experience</span><b>${person.experience || '1'}+ Years</b></div>
+            </div>
+
+            <div class="badge-container" style="justify-content: center; mask-image: none; -webkit-mask-image: none; overflow: visible; flex-wrap: wrap; margin-top: 1rem;">
+                ${person.skills.map(s => `<button class="badge" style="${getSkillStyle(s)}; cursor: pointer; border: none; font-family: inherit;" onclick="window.filterBySkill('${s}')">${s}</button>`).join('')}
             </div>
         </div>
         
-        <div class="drawer-section" style="margin-bottom: 2.5rem;">
+        <div class="drawer-section" style="margin-bottom: 2rem;">
             <p class="drawer-section-title">About</p>
             <p class="drawer-longbio">${person.longBio || person.bio}</p>
         </div>
 
-        <div class="drawer-section">
+        ${linksHTML}
+
+        <div class="drawer-section" style="margin-top: 2rem;">
             <p class="drawer-section-title">Connect</p>
             <div class="social-links" style="border: none; padding: 0;">
                 ${Object.entries(person.links).map(([platform, url]) => `
@@ -179,8 +230,8 @@ function openQuickView(person) {
             </div>
         </div>
 
-        <a href="mailto:${person.email}" class="btn-hire" style="margin-top: 4rem; padding: 16px; font-size: 0.9rem;">
-            Work with ${person.name.split(' ')[0]}
+        <a href="mailto:${person.email}" class="btn-hire" style="margin-top: 3rem; padding: 16px; font-size: 0.9rem;">
+            Hire ${person.name.split(' ')[0]}
         </a>
     `;
     
@@ -250,16 +301,26 @@ searchInput.addEventListener('input', () => {
 });
 
 filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+        // Prevent default behavior that might cause page jumps
+        e.preventDefault();
+        
+        if(btn.classList.contains('active')) return;
+
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        filterGallery();
+        
+        // Use requestAnimationFrame to ensure the animation starts 
+        // before the heavy rendering of cards begins
+        requestAnimationFrame(() => {
+            filterGallery();
+        });
     });
 });
 
 directory.addEventListener('click', (e) => {
     const card = e.target.closest('.card');
-    if (!card || e.target.closest('.btn-hire') || e.target.closest('.social-links') || e.target.closest('.read-more-btn')) return;
+    if (!card || e.target.closest('.btn-hire') || e.target.closest('.social-links') || e.target.closest('.read-more-btn') || e.target.closest('.badge')) return;
     const index = card.getAttribute('data-index');
     if (currentFilteredData[index]) openQuickView(currentFilteredData[index]);
 });
@@ -309,7 +370,7 @@ function initializeGallery() {
 
 function initStickyObserver() {
     const filterContainer = document.querySelector('.filter-container');
-    const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1), { threshold: [1], rootMargin: '-1px 0px 0px 0px' });
+    const observer = new IntersectionObserver(([e]) => e.target.classList.toggle('is-pinned', e.intersectionRatio < 1), { threshold: [1], rootMargin: '0px' });
     if (filterContainer) observer.observe(filterContainer);
 }
 
@@ -320,7 +381,6 @@ const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
 const closeModalBtn = document.querySelector(".close-modal");
-const fabBtn = document.querySelector(".fab"); 
 
 const openModal = () => { if (modal) modal.style.display = "flex"; };
 const closeModal = () => { if (modal) modal.style.display = "none"; };
