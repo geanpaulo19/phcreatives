@@ -274,11 +274,19 @@ function filterGallery() {
     const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
 
     const filtered = displayedCreatives.filter(person => {
-        const matchesSearch = person.name.toLowerCase().includes(query) || 
-                             person.bio.toLowerCase().includes(query) ||
-                             (person.longBio && person.longBio.toLowerCase().includes(query)) ||
-                             person.skills.some(s => s.toLowerCase().includes(query));
+        // Expanded search logic to include Location and Experience
+        const matchesSearch = 
+            person.name.toLowerCase().includes(query) || 
+            person.bio.toLowerCase().includes(query) ||
+            (person.longBio && person.longBio.toLowerCase().includes(query)) ||
+            person.skills.some(s => s.toLowerCase().includes(query)) ||
+            // New: Search by Location (e.g., "Manila", "Cebu", "Remote")
+            (person.location && person.location.toLowerCase().includes(query)) ||
+            // New: Search by Experience (e.g., "5", "5 years")
+            (person.experience && person.experience.toString().includes(query));
+
         let matchesFilter = activeFilter === 'all' || person.skills.some(skill => skill.toLowerCase() === activeFilter.toLowerCase());
+        
         return matchesSearch && matchesFilter;
     });
 
@@ -350,6 +358,22 @@ function initFooterObserver() {
 }
 
 /**
+ * Helper: Smooth Counter Animation
+ */
+function animateValue(obj, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start);
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+/**
  * Initial Initialization
  */
 function initializeGallery() {
@@ -360,6 +384,27 @@ function initializeGallery() {
         const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
 
         displayedCreatives = [...activePros, ...regulars]; 
+
+        // 1. Calculate Unique Specialties
+        // Flattens all skills arrays into one and gets unique values
+        const allSkills = displayedCreatives.flatMap(p => p.skills);
+        const uniqueSpecialties = [...new Set(allSkills)].length;
+
+        // 2. Trigger Counter Animations
+        const totalCountEl = document.getElementById('totalCount');
+        const specialtyCountEl = document.getElementById('specialtyCount');
+
+        if (totalCountEl) {
+            animateValue(totalCountEl, 0, displayedCreatives.length, 1200);
+        }
+        
+        if (specialtyCountEl) {
+            // Delay the specialty count slightly for a staggered effect
+            setTimeout(() => {
+                animateValue(specialtyCountEl, 0, uniqueSpecialties, 1000);
+            }, 200);
+        }
+
         renderCards(displayedCreatives);
         updateFilterCounts(); 
         initStickyObserver();
@@ -389,3 +434,21 @@ if (ctaOpenModalBtn) ctaOpenModalBtn.onclick = openModal;
 if (closeModalBtn) closeModalBtn.onclick = closeModal;
 
 window.onclick = (event) => { if (event.target === modal) closeModal(); };
+
+// About Modal Elements
+const aboutModal = document.getElementById("aboutModal");
+const openAboutBtn = document.getElementById("openAbout"); 
+const closeAboutBtn = document.querySelector(".close-about");
+
+const openAbout = () => { if (aboutModal) aboutModal.style.display = "flex"; };
+const closeAbout = () => { if (aboutModal) aboutModal.style.display = "none"; };
+
+if (openAboutBtn) openAboutBtn.onclick = openAbout;
+if (closeAboutBtn) closeAboutBtn.onclick = closeAbout;
+
+// Update your existing window.onclick to include aboutModal
+window.addEventListener('click', (event) => {
+    const pricingModal = document.getElementById("pricingModal");
+    if (event.target === pricingModal) pricingModal.style.display = "none";
+    if (event.target === aboutModal) closeAbout();
+});
