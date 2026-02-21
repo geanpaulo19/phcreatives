@@ -117,10 +117,12 @@ nav {
 }
 
 .search-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto 2rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 2rem;
 }
 
 .search-icon {
@@ -694,10 +696,7 @@ footer {
   .logo {
     font-size: 1.1rem;
   }
-  .search-wrapper {
-    display: block;
-    width: 100%;
-  }
+
   #search {
     height: 52px;
     line-height: 52px;
@@ -1326,10 +1325,6 @@ footer {
   display: none;
 }
 
-.search-wrapper {
-    position: relative; /* Ensure suggestions align to the wrapper */
-}
-
 .search-suggestions {
     position: absolute;
     top: 100%;
@@ -1376,12 +1371,6 @@ footer {
     background: var(--card-bg);
     padding: 2px 8px;
     border-radius: 4px;
-}
-
-.search-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
 }
 
 #search {
