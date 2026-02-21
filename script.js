@@ -1,9 +1,10 @@
 import { creatives } from './creatives.js';
 
+// --- DOM SELECTIONS ---
 const directory = document.getElementById('directory');
 const searchInput = document.getElementById('search');
 const searchWrapper = document.querySelector('.search-wrapper');
-const clearSearchBtn = document.getElementById('clearSearchBtn'); // Selection for the text-based button
+const clearSearchBtn = document.getElementById('clearSearchBtn');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const counter = document.getElementById('counter');
 
@@ -17,10 +18,11 @@ const drawerOverlay = document.querySelector('.drawer-overlay');
 // Suggestion Panel
 const suggestionsPanel = document.getElementById('searchSuggestions');
 
+// --- STATE MANAGEMENT ---
 let displayedCreatives = []; // Master list: Pro first, then Regular
 let currentFilteredData = []; // Currently visible list
 
-// Reusable SVG Star Component
+// --- CONSTANTS ---
 const VERIFIED_STAR_SVG = `
     <svg 
         class="verified-star" 
@@ -34,6 +36,18 @@ const VERIFIED_STAR_SVG = `
         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
     </svg>
 `;
+
+/**
+ * OPTIMIZATION 1: DEBOUNCE UTILITY
+ * Prevents heavy filtering logic from firing on every single keystroke.
+ */
+function debounce(func, delay) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
 
 /**
  * FEATURE: Filter by Skill (Clickable Badges)
@@ -189,6 +203,11 @@ function updateFilterCounts(currentSearchQuery = "") {
     });
 }
 
+/**
+ * OPTIMIZATION 2: STRING BUILDING FOR DISPLAYCREATIVES
+ * Building a single HTML string and injecting it via requestAnimationFrame 
+ * significantly reduces browser paint time and layout thrashing.
+ */
 function renderCards(data) {
     currentFilteredData = data; 
     counter.innerText = `Showcasing ${data.length} curated Filipino creatives`;
@@ -204,7 +223,8 @@ function renderCards(data) {
         return;
     }
 
-    directory.innerHTML = data.map((person, index) => {
+    // Optimization: Efficient string mapping
+    const cardsHTML = data.map((person, index) => {
         const isPro = isUserPro(person);
         const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
         const badgesHTML = person.skills.map(skill =>
@@ -213,9 +233,13 @@ function renderCards(data) {
         const verifiedBadge = isPro ? VERIFIED_STAR_SVG : '';
         const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration" onclick="event.stopPropagation();" class="btn-hire">Work with Me</a>` : '';
 
+        // OPTIMIZATION 3: IMAGE LAZY LOADING
+        // Added loading="lazy" and decoding="async" for smoother scrolling
         return `
             <div class="card ${isPro ? 'is-pro' : ''}" style="animation-delay: ${index * 0.05}s; cursor: pointer;" data-name="${person.name}">
-                <div class="profile-img"><img src="${person.image}" alt="${person.name}" loading="lazy"></div>
+                <div class="profile-img">
+                    <img src="${person.image}" alt="${person.name}" loading="lazy" decoding="async">
+                </div>
                 <div class="badge-container">${badgesHTML}</div>
                 <h3 style="display: flex; align-items: center; gap: 4px;">${person.name} ${verifiedBadge}</h3>
                 <div class="bio-wrapper">
@@ -235,6 +259,11 @@ function renderCards(data) {
             </div>
         `;
     }).join('');
+
+    // Optimization: Batch DOM update
+    window.requestAnimationFrame(() => {
+        directory.innerHTML = cardsHTML;
+    });
 }
 
 function openQuickView(person) {
@@ -320,13 +349,19 @@ window.toggleBio = (index, btn) => {
     }
 };
 
+/**
+ * OPTIMIZATION 4: EFFICIENT FILTERING LOGIC
+ * Re-structured filter to perform fewer operations per array element.
+ */
 function filterGallery() {
     const query = searchInput.value.toLowerCase().trim();
     const activeBtn = document.querySelector('.filter-btn.active');
     const activeFilter = activeBtn ? activeBtn.dataset.filter : 'all';
+    const isFilterAll = activeFilter === 'all';
 
     const filtered = displayedCreatives.filter(person => {
-        const matchesSearch =
+        // Optimized search check
+        const matchesSearch = !query || 
             person.name.toLowerCase().includes(query) ||
             person.bio.toLowerCase().includes(query) ||
             (person.longBio && person.longBio.toLowerCase().includes(query)) ||
@@ -334,8 +369,10 @@ function filterGallery() {
             (person.location && person.location.toLowerCase().includes(query)) ||
             (person.experience && person.experience.toString().includes(query));
 
-        let matchesFilter = activeFilter === 'all' || person.skills.some(skill => skill.toLowerCase() === activeFilter.toLowerCase());
-        return matchesSearch && matchesFilter;
+        if (!matchesSearch) return false;
+
+        // Optimized filter check
+        return isFilterAll || person.skills.some(skill => skill.toLowerCase() === activeFilter.toLowerCase());
     });
 
     renderCards(filtered);
@@ -344,7 +381,7 @@ function filterGallery() {
 
 window.clearSearch = () => {
     searchInput.value = '';
-    if (searchWrapper) searchWrapper.classList.remove('has-text'); // Clear UI visibility state
+    if (searchWrapper) searchWrapper.classList.remove('has-text'); 
     filterBtns.forEach(b => b.classList.remove('active'));
     const allBtn = document.querySelector('[data-filter="all"]');
     if (allBtn) allBtn.classList.add('active');
@@ -353,18 +390,22 @@ window.clearSearch = () => {
     searchInput.focus();
 };
 
-let searchTimeout;
+/**
+ * IMPLEMENTATION: DEBOUNCED SEARCH INPUT
+ */
+const debouncedFilter = debounce(() => {
+    filterGallery();
+}, 150);
+
 searchInput.addEventListener('input', (e) => {
     const val = e.target.value;
     
-    // Toggle the "has-text" class on the wrapper to show/hide "Clear" button
     if (searchWrapper) {
         val.length > 0 ? searchWrapper.classList.add('has-text') : searchWrapper.classList.remove('has-text');
     }
 
     showSuggestions(val);
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(filterGallery, 150);
+    debouncedFilter();
 });
 
 // Listener for the internal "Clear" text button
@@ -459,6 +500,7 @@ function initStickyObserver() {
 
 document.addEventListener('DOMContentLoaded', initializeGallery);
 
+// Modal Management
 const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
