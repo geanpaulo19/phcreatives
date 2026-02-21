@@ -1325,3 +1325,55 @@ footer {
 .drawer-content::-webkit-scrollbar {
   display: none;
 }
+
+.search-wrapper {
+    position: relative; /* Ensure suggestions align to the wrapper */
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #161b22; /* Slightly lighter than your bg-dark */
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-top: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.suggestion-label {
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.suggestion-type {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--card-bg);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
