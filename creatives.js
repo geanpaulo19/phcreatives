@@ -39,6 +39,23 @@ export const creatives = [
         experience: 7,
         bio: "Crafting bold visuals and engaging videos that elevate brands.",
         image: "images/nicko.png",
-        links: { portfolio: "https://franckolamanilao.my.canva.site/nicko-lamanilao-portfolio", facebook: "https://www.facebook.com/francko2021", instagram: "instagram.com/francko101", linkedin: "www.linkedin.com/in/frances-nicko-lamanilao-216ba1285",  },
+        links: { portfolio: "https://franckolamanilao.my.canva.site/nicko-lamanilao-portfolio", facebook: "https://www.facebook.com/francko2021", instagram: "https://instagram.com/francko101", linkedin: "https://www.linkedin.com/in/frances-nicko-lamanilao-216ba1285",  },
+    },
+        {
+        name: "Dana Praise Guerrero",
+        email: "danapraiseguerrero@gmail.com",
+        skills: ["Brand", "Graphics"],
+        location: "Remote",
+        experience: 3,
+        bio: "Freelance Graphic Designer helping NGOs and start-ups expand their audience reach.",
+        image: "images/dana.png",
+        featuredWork: [
+            { title: "Evergreen Labs Inc. | Visual Design", url: "https://www.behance.net/gallery/206121353/Evergreen-Labs-Inc-Visual-Design" },
+            { title: "BSM Global | Content Creation, Branding", url: "https://www.behance.net/gallery/194585395/BSM-Global-Content-Creation-Branding" },
+            { title: "Ad Creatives | Static", url: "https://www.behance.net/gallery/225782391/Ad-Creatives-Static" },
+            { title: "Dodolove | E-commerce Design", url: "https://www.behance.net/gallery/204413189/Dodolove-E-commerce-Design" },
+            { title: "Case Study | Lootgod", url: "https://www.behance.net/gallery/204714453/Case-Study-Lootgod" }
+        ],
+        links: { portfolio: "https://www.behance.net/danapraise", linkedin: "https://www.linkedin.com/in/danapraiseguerrero", behance: "https://behance.net/danapraise" },
     }
 ];
