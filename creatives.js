@@ -38,7 +38,7 @@ export const creatives = [
         location: "Davao, PH",
         experience: 7,
         bio: "Crafting bold visuals and engaging videos that elevate brands.",
-        image: "images/nicko.jpg",
+        image: "images/nicko.png",
         links: { portfolio: "https://franckolamanilao.my.canva.site/nicko-lamanilao-portfolio", facebook: "https://www.facebook.com/francko2021", instagram: "instagram.com/francko101", linkedin: "www.linkedin.com/in/frances-nicko-lamanilao-216ba1285",  },
     }
 ];
