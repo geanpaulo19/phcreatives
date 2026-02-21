@@ -467,11 +467,14 @@ function animateValue(obj, start, end, duration) {
 
 function initializeGallery() {
     showSkeletons();
+    
     setTimeout(() => {
+        // 1. Data Preparation
         const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
         const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
         displayedCreatives = [...activePros, ...regulars];
 
+        // 2. Counter Animations
         const allSkills = displayedCreatives.flatMap(p => p.skills);
         const uniqueSpecialties = [...new Set(allSkills.map(s => s.toLowerCase()))].length;
         const totalCountEl = document.getElementById('totalCount');
@@ -482,11 +485,37 @@ function initializeGallery() {
             setTimeout(() => animateValue(specialtyCountEl, 0, uniqueSpecialties, 1000), 200);
         }
 
+        // 3. Render with Motion logic
         renderCards(displayedCreatives);
+        
+        // 4. Initialize Motion Observers
         updateFilterCounts();
         initStickyObserver();
         initFooterObserver();
+        initScrollReveal(); // New motion trigger
+        
     }, 800);
+}
+
+function initScrollReveal() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Trigger the CSS animation
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+                observer.unobserve(entry.target); 
+            }
+        });
+    }, observerOptions);
+
+    // Apply to all cards
+    document.querySelectorAll('.card').forEach(card => observer.observe(card));
 }
 
 function initStickyObserver() {
