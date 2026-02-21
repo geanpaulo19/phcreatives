@@ -44,7 +44,7 @@ export const creatives = [
     {
         name: "Dana Praise Guerrero",
         email: "danapraiseguerrero@gmail.com",
-        skills: ["Brand", "Graphics"],
+        skills: ["Brand", "Graphics", "Frontend"],
         location: "Remote",
         experience: 3,
         bio: "Freelance Graphic Designer helping NGOs and start-ups expand their audience reach.",
