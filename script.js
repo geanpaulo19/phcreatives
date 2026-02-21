@@ -236,7 +236,7 @@ function renderCards(data) {
         // OPTIMIZATION 3: IMAGE LAZY LOADING
         // Added loading="lazy" and decoding="async" for smoother scrolling
         return `
-            <div class="card ${isPro ? 'is-pro' : ''}" style="animation-delay: ${index * 0.05}s; cursor: pointer;" data-name="${person.name}">
+            <div class="card ${isPro ? 'is-pro' : ''}" style="animation-delay: ${index * 0.04}s; cursor: pointer;" data-name="${person.name}">
                 <div class="profile-img">
                     <img src="${person.image}" alt="${person.name}" loading="lazy" decoding="async">
                 </div>
