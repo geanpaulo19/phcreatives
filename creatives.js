@@ -30,5 +30,15 @@ export const creatives = [
         bio: "Creative strategist transforming brand visions into high-impact graphic identities and cinematic video content.",
         image: "images/julius.jpg",
         links: { facebook: "https://www.facebook.com/julius.blanza.natividad" },
+    },
+    {
+        name: "Nicko Lamanilao",
+        email: "franckolamanilao@gmail.com",
+        skills: ["Brand", "Graphics", "Motion"],
+        location: "Davao, PH",
+        experience: 7,
+        bio: "Crafting bold visuals and engaging videos that elevate brands.",
+        image: "images/nicko.jpg",
+        links: { portfolio: "https://franckolamanilao.my.canva.site/nicko-lamanilao-portfolio", facebook: "https://www.facebook.com/francko2021", instagram: "instagram.com/francko101", linkedin: "www.linkedin.com/in/frances-nicko-lamanilao-216ba1285",  },
     }
 ];
