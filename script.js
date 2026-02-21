@@ -105,7 +105,7 @@ function showSuggestions(query) {
         const duplicate = seen.has(el.label);
         seen.add(el.label);
         return !duplicate;
-    }).slice(0, 6);
+    }).slice(0, 20);
 
     if (limitedMatches.length > 0) {
         suggestionsPanel.innerHTML = limitedMatches.map(m => `
