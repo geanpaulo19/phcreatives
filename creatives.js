@@ -41,7 +41,7 @@ export const creatives = [
         image: "images/nicko.png",
         links: { portfolio: "https://franckolamanilao.my.canva.site/nicko-lamanilao-portfolio", facebook: "https://www.facebook.com/francko2021", instagram: "https://instagram.com/francko101", linkedin: "https://www.linkedin.com/in/frances-nicko-lamanilao-216ba1285",  },
     },
-        {
+    {
         name: "Dana Praise Guerrero",
         email: "danapraiseguerrero@gmail.com",
         skills: ["Brand", "Graphics"],
@@ -57,5 +57,15 @@ export const creatives = [
             { title: "Case Study | Lootgod", url: "https://www.behance.net/gallery/204714453/Case-Study-Lootgod" }
         ],
         links: { portfolio: "https://www.behance.net/danapraise", linkedin: "https://www.linkedin.com/in/danapraiseguerrero", behance: "https://behance.net/danapraise" },
+    },
+        {
+        name: "Jeffrey Celestino",
+        email: "jcelestino688@gmail.com",
+        skills: ["Brand", "Graphics", "Frontend"],
+        location: "Puerto Princesa, PH",
+        experience: 5,
+        bio: "As the owner of JEVM Graphics Design, this professional uses over five years of experience to create logos and marketing materials that help brands stand out. They turn creative ideas into clean, high-quality visuals that make a real impact.",
+        image: "images/jeffrey.png",
+        links: { portfolio: "https://jeffreycelestino.carrd.co", facebook: "https://www.facebook.com/jeffrey.celestino.55/", linkedin: "https://www.linkedin.com/in/jeffrey-celestino/", behance: "https://www.behance.net/jevmgraphicsdesign" },
     }
 ];
