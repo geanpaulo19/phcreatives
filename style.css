@@ -1461,28 +1461,6 @@ footer {
     transform: scale(1.2) rotate(10deg);
 }
 
-/* 3. Badge Pulse Effect */
-.badge {
-    position: relative;
-    overflow: hidden;
-}
-
-.badge::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-    transform: rotate(45deg);
-    transition: 0.5s;
-}
-
-.badge:hover::after {
-    left: 100%;
-}
-
 /* 4. Filter Button Active Glow */
 .filter-btn.active {
     box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
