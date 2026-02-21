@@ -58,7 +58,7 @@ export const creatives = [
         ],
         links: { portfolio: "https://www.behance.net/danapraise", linkedin: "https://www.linkedin.com/in/danapraiseguerrero", behance: "https://behance.net/danapraise" },
     },
-        {
+    {
         name: "Jeffrey Celestino",
         email: "jcelestino688@gmail.com",
         skills: ["Brand", "Graphics", "Frontend"],
@@ -67,5 +67,15 @@ export const creatives = [
         bio: "As the owner of JEVM Graphics Design, this professional uses over five years of experience to transform brand ideas into clean, high-impact visual designs.",
         image: "images/jeffrey.png",
         links: { portfolio: "https://jeffreycelestino.carrd.co", facebook: "https://www.facebook.com/jeffrey.celestino.55/", linkedin: "https://www.linkedin.com/in/jeffrey-celestino/", behance: "https://www.behance.net/jevmgraphicsdesign" },
+    },
+    {
+        name: "Lloyd Anthony Daza",
+        email: "dyolldesigns@gmail.com",
+        skills: ["Brand", "Graphics", "Motion"],
+        location: "Marikina, PH",
+        experience: 6,
+        bio: "Freelance Designer partnering with startups and established brands, both local and international.",
+        image: "images/lloyd.png",
+        links: { facebook: "https://www.facebook.com/dyolldesigns", instagram: "https://www.instagram.com/dyoll_designs", behance: "https://www.behance.net/dyolldesigns" },
     }
 ];
