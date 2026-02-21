@@ -77,5 +77,15 @@ export const creatives = [
         bio: "Freelance Designer partnering with startups and established brands, both local and international.",
         image: "images/lloyd.png",
         links: { facebook: "https://www.facebook.com/dyolldesigns", instagram: "https://www.instagram.com/dyoll_designs", behance: "https://www.behance.net/dyolldesigns" },
+    },
+    {
+        name: "Jessie James Bedia",
+        email: "jessiejamesbedia@gmail.com",
+        skills: ["Brand", "Graphics"],
+        location: "Pasay, PH",
+        experience: 3,
+        bio: "Freelance Graphic Designer crafting high-impact visual identities and modern brand stories.",
+        image: "images/jessie.png",
+        links: { facebook: "https://www.facebook.com/share/1BBPu6hVPo/?mibextid=wwXIfr", behance: "https://www.behance.net/jessiebedia", linkedin: "https://www.linkedin.com/in/jjkultur" },
     }
 ];
