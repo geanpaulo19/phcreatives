@@ -2,6 +2,8 @@ import { creatives } from './creatives.js';
 
 const directory = document.getElementById('directory');
 const searchInput = document.getElementById('search');
+const searchWrapper = document.querySelector('.search-wrapper');
+const clearSearchBtn = document.getElementById('clearSearchBtn'); // Selection for the text-based button
 const filterBtns = document.querySelectorAll('.filter-btn');
 const counter = document.getElementById('counter');
 
@@ -44,6 +46,7 @@ window.filterBySkill = (skillName) => {
 
     if (targetBtn) {
         searchInput.value = '';
+        if (searchWrapper) searchWrapper.classList.remove('has-text');
         filterBtns.forEach(b => b.classList.remove('active'));
         targetBtn.classList.add('active');
         filterGallery();
@@ -84,7 +87,6 @@ function showSuggestions(query) {
     const experiences = [...new Set(creatives.map(p => p.experience).filter(v => v != null))];
     experiences.forEach(exp => {
         const expStr = exp.toString();
-        // Trigger if number matches OR if user starts typing "years"
         if (expStr.includes(lowerQuery) || ("years".includes(lowerQuery) && lowerQuery.length > 2)) {
             matches.push({ label: `${exp}+ Years Exp`, type: 'Experience', value: expStr });
         }
@@ -98,7 +100,6 @@ function showSuggestions(query) {
         }
     });
 
-    // Deduplicate suggestions by label
     const seen = new Set();
     const limitedMatches = matches.filter(el => {
         const duplicate = seen.has(el.label);
@@ -121,6 +122,7 @@ function showSuggestions(query) {
 
 window.selectSuggestion = (value) => {
     searchInput.value = value;
+    if (searchWrapper) searchWrapper.classList.add('has-text');
     if (suggestionsPanel) suggestionsPanel.style.display = 'none';
     filterGallery();
 };
@@ -342,20 +344,33 @@ function filterGallery() {
 
 window.clearSearch = () => {
     searchInput.value = '';
+    if (searchWrapper) searchWrapper.classList.remove('has-text'); // Clear UI visibility state
     filterBtns.forEach(b => b.classList.remove('active'));
     const allBtn = document.querySelector('[data-filter="all"]');
     if (allBtn) allBtn.classList.add('active');
     if (suggestionsPanel) suggestionsPanel.style.display = 'none';
     filterGallery();
+    searchInput.focus();
 };
 
 let searchTimeout;
 searchInput.addEventListener('input', (e) => {
     const val = e.target.value;
+    
+    // Toggle the "has-text" class on the wrapper to show/hide "Clear" button
+    if (searchWrapper) {
+        val.length > 0 ? searchWrapper.classList.add('has-text') : searchWrapper.classList.remove('has-text');
+    }
+
     showSuggestions(val);
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(filterGallery, 150);
 });
+
+// Listener for the internal "Clear" text button
+if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', window.clearSearch);
+}
 
 document.addEventListener('click', (e) => {
     if (suggestionsPanel && !e.target.closest('.search-wrapper')) {
@@ -444,7 +459,6 @@ function initStickyObserver() {
 
 document.addEventListener('DOMContentLoaded', initializeGallery);
 
-// Modal handling logic remains same...
 const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
