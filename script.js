@@ -12,7 +12,7 @@ const drawerContent = document.querySelector('.drawer-content');
 const closeDrawerBtn = document.querySelector('.close-drawer');
 const drawerOverlay = document.querySelector('.drawer-overlay');
 
-// Suggestion Panel (New)
+// Suggestion Panel
 const suggestionsPanel = document.getElementById('searchSuggestions');
 
 let displayedCreatives = []; // Master list: Pro first, then Regular
@@ -48,17 +48,16 @@ window.filterBySkill = (skillName) => {
         targetBtn.classList.add('active');
         filterGallery();
         if (suggestionsPanel) suggestionsPanel.style.display = 'none';
-
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 };
 
 /**
- * FEATURE: Dynamic Search Suggestions
+ * FEATURE: Dynamic Search Suggestions (Including Experience)
  */
 function showSuggestions(query) {
     if (!suggestionsPanel) return;
-    if (!query || query.length < 2) {
+    if (!query || query.length < 1) {
         suggestionsPanel.style.display = 'none';
         return;
     }
@@ -81,7 +80,17 @@ function showSuggestions(query) {
         }
     });
 
-    // 3. Matches for Unique Locations
+    // 3. Matches for Experience
+    const experiences = [...new Set(creatives.map(p => p.experience).filter(v => v != null))];
+    experiences.forEach(exp => {
+        const expStr = exp.toString();
+        // Trigger if number matches OR if user starts typing "years"
+        if (expStr.includes(lowerQuery) || ("years".includes(lowerQuery) && lowerQuery.length > 2)) {
+            matches.push({ label: `${exp}+ Years Exp`, type: 'Experience', value: expStr });
+        }
+    });
+
+    // 4. Matches for Unique Locations
     const uniqueLocations = [...new Set(creatives.map(p => p.location).filter(Boolean))];
     uniqueLocations.forEach(loc => {
         if (loc.toLowerCase().includes(lowerQuery)) {
@@ -89,8 +98,13 @@ function showSuggestions(query) {
         }
     });
 
-    // Display top 6 results
-    const limitedMatches = matches.slice(0, 6);
+    // Deduplicate suggestions by label
+    const seen = new Set();
+    const limitedMatches = matches.filter(el => {
+        const duplicate = seen.has(el.label);
+        seen.add(el.label);
+        return !duplicate;
+    }).slice(0, 6);
 
     if (limitedMatches.length > 0) {
         suggestionsPanel.innerHTML = limitedMatches.map(m => `
@@ -154,19 +168,16 @@ function showSkeletons() {
 
 function updateFilterCounts(currentSearchQuery = "") {
     const query = currentSearchQuery.toLowerCase().trim();
-    
     filterBtns.forEach(btn => {
         const filter = btn.dataset.filter;
-        
         const count = displayedCreatives.filter(person => {
             const matchesSearch = !query || 
                 person.name.toLowerCase().includes(query) ||
                 person.skills.some(s => s.toLowerCase().includes(query)) ||
-                (person.location && person.location.toLowerCase().includes(query));
-                
+                (person.location && person.location.toLowerCase().includes(query)) ||
+                (person.experience && person.experience.toString().includes(query));
             const matchesCategory = filter === 'all' || 
                 person.skills.some(s => s.toLowerCase() === filter.toLowerCase());
-                
             return matchesSearch && matchesCategory;
         }).length;
 
@@ -194,11 +205,9 @@ function renderCards(data) {
     directory.innerHTML = data.map((person, index) => {
         const isPro = isUserPro(person);
         const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
-
         const badgesHTML = person.skills.map(skill =>
             `<button class="badge" style="${getSkillStyle(skill)}; cursor: pointer; border: none; font-family: inherit;" onclick="event.stopPropagation(); window.filterBySkill('${skill}')">${skill}</button>`
         ).join('');
-
         const verifiedBadge = isPro ? VERIFIED_STAR_SVG : '';
         const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration" onclick="event.stopPropagation();" class="btn-hire">Work with Me</a>` : '';
 
@@ -320,10 +329,10 @@ function filterGallery() {
             person.bio.toLowerCase().includes(query) ||
             (person.longBio && person.longBio.toLowerCase().includes(query)) ||
             person.skills.some(s => s.toLowerCase().includes(query)) ||
-            (person.location && person.location.toLowerCase().includes(query));
+            (person.location && person.location.toLowerCase().includes(query)) ||
+            (person.experience && person.experience.toString().includes(query));
 
         let matchesFilter = activeFilter === 'all' || person.skills.some(skill => skill.toLowerCase() === activeFilter.toLowerCase());
-
         return matchesSearch && matchesFilter;
     });
 
@@ -344,12 +353,10 @@ let searchTimeout;
 searchInput.addEventListener('input', (e) => {
     const val = e.target.value;
     showSuggestions(val);
-    
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(filterGallery, 150);
 });
 
-// Close suggestions on outside click
 document.addEventListener('click', (e) => {
     if (suggestionsPanel && !e.target.closest('.search-wrapper')) {
         suggestionsPanel.style.display = 'none';
@@ -407,12 +414,10 @@ function initializeGallery() {
     setTimeout(() => {
         const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
         const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
-
         displayedCreatives = [...activePros, ...regulars];
 
         const allSkills = displayedCreatives.flatMap(p => p.skills);
         const uniqueSpecialties = [...new Set(allSkills.map(s => s.toLowerCase()))].length;
-
         const totalCountEl = document.getElementById('totalCount');
         const specialtyCountEl = document.getElementById('specialtyCount');
 
@@ -439,7 +444,7 @@ function initStickyObserver() {
 
 document.addEventListener('DOMContentLoaded', initializeGallery);
 
-// Modal handling
+// Modal handling logic remains same...
 const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
