@@ -1421,3 +1421,107 @@ footer {
 .search-wrapper.has-text .clear-search-text {
     display: block;
 }
+
+/* --- NEW ANIMATION SYSTEM --- */
+
+/* 1. Card Entry Animation */
+@keyframes cardReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+        filter: blur(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.card {
+    /* Existing card styles preserved */
+    animation: cardReveal 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    will-change: transform, opacity;
+}
+
+/* 2. Hover Micro-interactions */
+.card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
+                0 0 20px rgba(99, 102, 241, 0.2);
+    border-color: var(--accent);
+}
+
+.card:hover .profile-img img {
+    transform: scale(1.1);
+}
+
+.card:hover .verified-star {
+    filter: drop-shadow(0 0 8px #FFD700);
+    transform: scale(1.2) rotate(10deg);
+}
+
+/* 3. Badge Pulse Effect */
+.badge {
+    position: relative;
+    overflow: hidden;
+}
+
+.badge::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg);
+    transition: 0.5s;
+}
+
+.badge:hover::after {
+    left: 100%;
+}
+
+/* 4. Filter Button Active Glow */
+.filter-btn.active {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+}
+
+/* 5. Skeleton Shimmer Logic */
+.skeleton-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.05) 20%,
+        rgba(255, 255, 255, 0.1) 60%,
+        rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    100% { transform: translateX(100%); }
+}
+
+/* Add to style.css */
+.filter-container {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUpFade 0.8s ease forwards 0.3s;
+}
+
+@keyframes slideUpFade {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
