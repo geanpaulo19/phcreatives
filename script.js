@@ -12,6 +12,9 @@ const drawerContent = document.querySelector('.drawer-content');
 const closeDrawerBtn = document.querySelector('.close-drawer');
 const drawerOverlay = document.querySelector('.drawer-overlay');
 
+// Suggestion Panel (New)
+const suggestionsPanel = document.getElementById('searchSuggestions');
+
 let displayedCreatives = []; // Master list: Pro first, then Regular
 let currentFilteredData = []; // Currently visible list
 
@@ -44,9 +47,68 @@ window.filterBySkill = (skillName) => {
         filterBtns.forEach(b => b.classList.remove('active'));
         targetBtn.classList.add('active');
         filterGallery();
+        if (suggestionsPanel) suggestionsPanel.style.display = 'none';
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+};
+
+/**
+ * FEATURE: Dynamic Search Suggestions
+ */
+function showSuggestions(query) {
+    if (!suggestionsPanel) return;
+    if (!query || query.length < 2) {
+        suggestionsPanel.style.display = 'none';
+        return;
+    }
+
+    const matches = [];
+    const lowerQuery = query.toLowerCase();
+
+    // 1. Matches for Names
+    creatives.forEach(p => {
+        if (p.name.toLowerCase().includes(lowerQuery)) {
+            matches.push({ label: p.name, type: 'Creative', value: p.name });
+        }
+    });
+
+    // 2. Matches for Unique Skills
+    const uniqueSkills = [...new Set(creatives.flatMap(p => p.skills))];
+    uniqueSkills.forEach(skill => {
+        if (skill.toLowerCase().includes(lowerQuery)) {
+            matches.push({ label: skill, type: 'Skill', value: skill });
+        }
+    });
+
+    // 3. Matches for Unique Locations
+    const uniqueLocations = [...new Set(creatives.map(p => p.location).filter(Boolean))];
+    uniqueLocations.forEach(loc => {
+        if (loc.toLowerCase().includes(lowerQuery)) {
+            matches.push({ label: loc, type: 'Location', value: loc });
+        }
+    });
+
+    // Display top 6 results
+    const limitedMatches = matches.slice(0, 6);
+
+    if (limitedMatches.length > 0) {
+        suggestionsPanel.innerHTML = limitedMatches.map(m => `
+            <div class="suggestion-item" onclick="window.selectSuggestion('${m.value}')">
+                <span class="suggestion-label">${m.label}</span>
+                <span class="suggestion-type">${m.type}</span>
+            </div>
+        `).join('');
+        suggestionsPanel.style.display = 'block';
+    } else {
+        suggestionsPanel.style.display = 'none';
+    }
+}
+
+window.selectSuggestion = (value) => {
+    searchInput.value = value;
+    if (suggestionsPanel) suggestionsPanel.style.display = 'none';
+    filterGallery();
 };
 
 /**
@@ -90,9 +152,6 @@ function showSkeletons() {
     `).join('');
 }
 
-/**
- * DYNAMIC FILTER COUNTS: Updates based on current search query
- */
 function updateFilterCounts(currentSearchQuery = "") {
     const query = currentSearchQuery.toLowerCase().trim();
     
@@ -102,7 +161,8 @@ function updateFilterCounts(currentSearchQuery = "") {
         const count = displayedCreatives.filter(person => {
             const matchesSearch = !query || 
                 person.name.toLowerCase().includes(query) ||
-                person.skills.some(s => s.toLowerCase().includes(query));
+                person.skills.some(s => s.toLowerCase().includes(query)) ||
+                (person.location && person.location.toLowerCase().includes(query));
                 
             const matchesCategory = filter === 'all' || 
                 person.skills.some(s => s.toLowerCase() === filter.toLowerCase());
@@ -276,13 +336,24 @@ window.clearSearch = () => {
     filterBtns.forEach(b => b.classList.remove('active'));
     const allBtn = document.querySelector('[data-filter="all"]');
     if (allBtn) allBtn.classList.add('active');
+    if (suggestionsPanel) suggestionsPanel.style.display = 'none';
     filterGallery();
 };
 
 let searchTimeout;
-searchInput.addEventListener('input', () => {
+searchInput.addEventListener('input', (e) => {
+    const val = e.target.value;
+    showSuggestions(val);
+    
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(filterGallery, 150);
+});
+
+// Close suggestions on outside click
+document.addEventListener('click', (e) => {
+    if (suggestionsPanel && !e.target.closest('.search-wrapper')) {
+        suggestionsPanel.style.display = 'none';
+    }
 });
 
 filterBtns.forEach(btn => {
