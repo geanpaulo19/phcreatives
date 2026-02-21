@@ -136,20 +136,29 @@ nav {
 }
 
 #search {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
+  /* Layout & Sizing */
+  display: block;
+  width: 100%;
   height: 56px;
   line-height: 56px;
-  padding: 0 20px 0 55px;
+  
+  /* Spacing: Left (50px for icon space), Right (65px for "Clear" text) */
+  padding: 0 65px 0 50px;
+  
+  /* Visual Styling */
+  background: var(--card-bg);
+  border: 1px solid var(--border);
   border-radius: 20px;
   color: white;
-  width: 100%;
-  outline: none;
   font-size: 1rem;
+  outline: none;
+  
+  /* Glassmorphism & System */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  display: block;
   -webkit-appearance: none;
+  
+  /* Smooth interaction (inherits from your * reset) */
 }
 
 #search:focus {
@@ -697,13 +706,6 @@ footer {
     font-size: 1.1rem;
   }
 
-  #search {
-    height: 52px;
-    line-height: 52px;
-    padding: 0 20px 0 50px;
-    font-size: 16px;
-    -webkit-appearance: none;
-  }
   .search-icon {
     left: 18px;
   }
@@ -1341,6 +1343,7 @@ footer {
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
+/* Optional: Make the scrollbar look cleaner in Dark Mode */
 .search-suggestions::-webkit-scrollbar {
     width: 6px;
 }
@@ -1379,11 +1382,6 @@ footer {
     background: var(--card-bg);
     padding: 2px 8px;
     border-radius: 4px;
-}
-
-#search {
-    width: 100%;
-    padding-right: 65px; /* Increased space to accommodate the word 'Clear' */
 }
 
 .clear-search-text {
