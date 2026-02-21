@@ -293,8 +293,24 @@ nav {
   flex-direction: column;
   height: 100%;
   min-width: 0;
+
+  /* --- MOTION INITIAL STATE --- */
   opacity: 0;
-  animation: fadeInUp 0.5s ease forwards;
+  transform: translateY(30px) scale(0.98);
+  filter: blur(4px); /* Adds a premium "focus" effect as they appear */
+  
+  /* --- TRANSITION SETTINGS --- */
+  /* This ensures the JS changes (.style.opacity = "1") are smooth */
+  transition: 
+    opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 1s cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 0.8s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  /* Inherit the stagger delay calculated in renderCards */
+  transition-delay: inherit; 
+  will-change: transform, opacity;
 }
 
 @keyframes fadeInUp {
@@ -313,6 +329,7 @@ nav {
   border-color: var(--accent);
   background: rgba(255, 255, 255, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition-delay: 0s !important;
 }
 
 .card.is-pro {
