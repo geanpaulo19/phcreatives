@@ -64,7 +64,7 @@ export const creatives = [
         skills: ["Brand", "Graphics", "Frontend"],
         location: "Puerto Princesa, PH",
         experience: 5,
-        bio: "As the owner of JEVM Graphics Design, this professional uses over five years of experience to create logos and marketing materials that help brands stand out. They turn creative ideas into clean, high-quality visuals that make a real impact.",
+        bio: "As the owner of JEVM Graphics Design, this professional uses over five years of experience to transform brand ideas into clean, high-impact visual designs.",
         image: "images/jeffrey.png",
         links: { portfolio: "https://jeffreycelestino.carrd.co", facebook: "https://www.facebook.com/jeffrey.celestino.55/", linkedin: "https://www.linkedin.com/in/jeffrey-celestino/", behance: "https://www.behance.net/jevmgraphicsdesign" },
     }
