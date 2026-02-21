@@ -1341,6 +1341,14 @@ footer {
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
+.search-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+.search-suggestions::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
+
 .suggestion-item {
     padding: 12px 16px;
     cursor: pointer;
