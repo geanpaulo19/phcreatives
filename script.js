@@ -455,30 +455,21 @@ function filterGallery() {
 }
 
 window.clearSearch = () => {
-    // 1. Reset inputs
     searchInput.value = '';
     if (searchWrapper) searchWrapper.classList.remove('has-text'); 
-    
-    // 2. Reset category buttons
     filterBtns.forEach(b => b.classList.remove('active'));
     const allBtn = document.querySelector('[data-filter="all"]');
     if (allBtn) allBtn.classList.add('active');
-    
-    // 3. Clear suggestions
     if (suggestionsPanel) suggestionsPanel.style.display = 'none';
 
-    // 4. Update URL without refreshing or jumping
     const url = new URL(window.location);
     url.searchParams.delete('filter');
     url.searchParams.delete('name');
     window.history.replaceState({}, '', url);
 
-    // 5. Re-run the filter logic
     filterGallery();
     updateInterfaceState();
-
-    // REMOVED: window.scrollTo({ top: 0 }) 
-    // This keeps the user at their current scroll position
+    searchInput.focus();
 };
 
 const debouncedFilter = debounce(() => {
