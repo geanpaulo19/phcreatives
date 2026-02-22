@@ -500,6 +500,7 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// Update the Filter Listener to trigger the intelligence
 filterBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -507,18 +508,21 @@ filterBtns.forEach(btn => {
 
         const filter = btn.dataset.filter;
         const url = new URL(window.location);
-
-        if (filter === 'all') {
-            url.searchParams.delete('filter');
-        } else {
-            url.searchParams.set('filter', slugify(filter));
-        }
+        filter === 'all' ? url.searchParams.delete('filter') : url.searchParams.set('filter', slugify(filter));
         window.history.replaceState({}, '', url);
 
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+
         filterGallery(); 
         updateInterfaceState();
+
+        // TRIGGER INTELLIGENCE
+        renderSpotlightPill();
+        
+        // Visual Feedback for update
+        const pill = document.querySelector('.spotlight-pill');
+        if (pill) pill.style.animation = 'spotlightUpdate 0.5s ease';
     });
 });
 
@@ -677,29 +681,92 @@ window.addEventListener('click', (event) => {
 });
 
 /**
- * FEATURE: Spotlight Pill
- * Renders a compact, high-info pill for a featured creator
+ * FEATURE: Balanced Merit-Based Spotlight
+ * Features members based on a mix of Pro status, Experience, and Skill relevance.
  */
 function renderSpotlightPill() {
     const container = document.getElementById('spotlightContainer');
-    // Find the person marked for spotlight in the source data
-    const person = creatives.find(p => p.isSpotlight);
+    if (!container || !creatives.length) return;
 
-    if (!person || !container) return;
+    const activeBtn = document.querySelector('.filter-btn.active');
+    const currentFilter = activeBtn ? activeBtn.textContent.trim() : 'All';
 
-    // Extracting info for the "extra info" section
-    const primarySkill = person.skills[0]; 
-    const yearsExp = person.experience || 1;
+    // 1. Calculate Merit Scores for everyone
+    const scoredPool = creatives.map((person, index) => {
+        let score = 10; // Base score for everyone
 
+        // CRITERIA A: Experience (Merit-based)
+        // High experience is a huge factor (e.g., 10 years adds 30 points)
+        if (person.experience) {
+            score += Math.floor(person.experience * 3); 
+        }
+
+        // CRITERIA B: Pro Status (Support-based)
+        // Adds a fixed bonus, but can be outweighed by a high-experience Non-Pro
+        if (isUserPro(person)) {
+            score += 25; 
+        }
+
+        // CRITERIA C: Skill Relevance (Context-based)
+        // Does this person match what the user is looking at right now?
+        const isMatch = currentFilter === 'All' || person.skills.includes(currentFilter);
+        if (isMatch) {
+            score += 40; 
+        }
+
+        // CRITERIA D: Completeness (Quality-based)
+        // Reward creators who have filled out their featured work
+        if (person.featuredWork && person.featuredWork.length > 0) {
+            score += (person.featuredWork.length * 2);
+        }
+
+        return { index, score, person };
+    });
+
+    // 2. Total Score for the pool
+    const totalScore = scoredPool.reduce((sum, item) => sum + item.score, 0);
+
+    // 3. Daily Seed (Date + Filter)
+    const today = new Date();
+    const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    const filterHash = currentFilter.split('').reduce((a, b) => (a << 5) - a + b.charCodeAt(0), 0);
+    const finalSeed = Math.abs(dateSeed + filterHash);
+
+    // 4. Deterministic Selection
+    const lcg = (seed) => (seed * 16807) % 2147483647;
+    let selectionValue = lcg(finalSeed) % totalScore;
+    
+    let winner = scoredPool[0].person;
+    for (const item of scoredPool) {
+        if (selectionValue < item.score) {
+            winner = item.person;
+            break;
+        }
+        selectionValue -= item.score;
+    }
+
+    // 5. Smart Labels based on the "Winning" factor
+    let label = "Daily Spotlight";
+    let isDiscovery = false;
+
+    if (currentFilter !== 'All' && winner.skills.includes(currentFilter)) {
+        label = `Top in ${currentFilter}`;
+        isDiscovery = true;
+    } else if (winner.experience >= 10) {
+        label = "Industry Expert";
+    } else if (isUserPro(winner)) {
+        label = "Verified Creator";
+    }
+
+    // 6. Final Render
     container.innerHTML = `
-        <div class="spotlight-pill" onclick="window.openQuickViewByName('${person.name}')" title="View Featured Profile">
-            <img src="${person.image}" alt="${person.name}" loading="lazy">
-            <span class="spotlight-label">Spotlight</span>
-            <span class="spotlight-name">${person.name}</span>
-            
+        <div class="spotlight-pill" onclick="window.openQuickViewByName('${winner.name}')">
+            <img src="${winner.image}" alt="${winner.name}">
+            <span class="spotlight-label ${isDiscovery ? 'is-discovery' : ''}">${label}</span>
+            <span class="spotlight-name">${winner.name}</span>
             <div class="spotlight-meta">
-                <span class="spotlight-role">${primarySkill}</span>
-                <span class="spotlight-exp">${yearsExp}y+ Exp</span>
+                <span class="spotlight-role">${winner.skills[0]}</span>
+                <span class="spotlight-exp">${winner.experience || 1}y+ Exp</span>
                 <span class="spotlight-arrow">→</span>
             </div>
         </div>
@@ -708,13 +775,14 @@ function renderSpotlightPill() {
 
 /**
  * HELPER: Open QuickView by Name
- * Bridging the Spotlight click to the existing Drawer logic
+ * Must be attached to window for HTML onclick to work
  */
 window.openQuickViewByName = (name) => {
-    // We search the source 'creatives' to ensure we find them even if filtered out of the main grid
+    console.log("Spotlight clicked for:", name); // Debug line
     const person = creatives.find(p => p.name === name);
     if (person) {
-        // openQuickView is the function already defined in your script.js
         openQuickView(person);
+    } else {
+        console.error("Creative not found:", name);
     }
 };
