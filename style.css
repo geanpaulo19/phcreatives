@@ -229,28 +229,24 @@ nav {
 }
 
 .filter-container.is-pinned .filter-btn {
-  transform: scale(0.9);
-  margin: 0 -5px;
+  margin: 0 1px;
 }
 
 .filter-container.is-pinned .filter-btn.active {
-  transform: scale(0.98);
-  margin: 0 -2px;
+  margin: 0 1px;
 }
 
 .filter-btn:hover {
   border-color: rgba(255, 255, 255, 0.3);
   color: var(--text-main);
-  transform: translateY(-2px);
 }
 
 .filter-container.is-pinned .filter-btn:hover {
-  transform: scale(0.93) translateY(-2px);
-  margin: 0 -5px;
+  margin: 0 1px;
 }
 
 .filter-btn:active {
-  transform: scale(0.92);
+  transform: inherit; /* This makes it stay exactly like its normal state when clicked */
 }
 
 @media (max-width: 1024px) {
@@ -1481,7 +1477,7 @@ footer {
 /* 4. Filter Button Active Glow */
 .filter-btn.active {
     box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-    transform: translateY(-2px);
+    transform: none;
 }
 
 /* 5. Skeleton Shimmer Logic */
