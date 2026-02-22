@@ -7,6 +7,8 @@ const searchWrapper = document.querySelector('.search-wrapper');
 const clearSearchBtn = document.getElementById('clearSearchBtn');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const counter = document.getElementById('counter');
+const shareCategoryBtn = document.getElementById('shareCategoryBtn');
+const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 
 // Drawer Elements
 const drawer = document.getElementById('quickView');
@@ -38,8 +40,32 @@ const VERIFIED_STAR_SVG = `
 `;
 
 /**
- * OPTIMIZATION 1: DEBOUNCE UTILITY
- * Prevents heavy filtering logic from firing on every single keystroke.
+ * FEATURE: URL SLUGIFICATION
+ */
+const slugify = (text) => {
+    return text
+        .toString()
+        .toLowerCase()
+        .replace(/\//g, '-')   
+        .replace(/\s+/g, '-')   
+        .replace(/[^\w-]+/g, '') 
+        .replace(/--+/g, '-')   
+        .replace(/^-+/, '')     
+        .replace(/-+$/, '');    
+};
+
+/**
+ * FEATURE: SMART HIGHLIGHTING
+ */
+function highlightText(text, query) {
+    if (!query || !query.trim() || !text) return text;
+    const escapedQuery = query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedQuery})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+}
+
+/**
+ * OPTIMIZATION: DEBOUNCE UTILITY
  */
 function debounce(func, delay) {
     let timeout;
@@ -47,6 +73,36 @@ function debounce(func, delay) {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), delay);
     };
+}
+
+/**
+ * FEATURE: INTERFACE STATE UPDATER
+ * Syncs the visibility of the Reset button and the Share FAB
+ */
+function updateInterfaceState() {
+    const query = searchInput.value.trim();
+    const activeBtn = document.querySelector('.filter-btn.active');
+    const filterValue = activeBtn ? activeBtn.dataset.filter : 'all';
+
+    // 1. Reset Button Visibility
+    if (clearFiltersBtn) {
+        if (query !== "" || filterValue !== "all") {
+            clearFiltersBtn.classList.add('is-active');
+        } else {
+            clearFiltersBtn.classList.remove('is-active');
+        }
+    }
+
+    // 2. Share FAB Visibility
+    if (shareCategoryBtn) {
+        if (filterValue === 'all') {
+            shareCategoryBtn.classList.remove('visible');
+        } else {
+            const label = activeBtn.getAttribute('data-label') || activeBtn.innerText.split(' (')[0];
+            shareCategoryBtn.querySelector('span').innerText = `Share ${label}`;
+            shareCategoryBtn.classList.add('visible');
+        }
+    }
 }
 
 /**
@@ -63,14 +119,20 @@ window.filterBySkill = (skillName) => {
         if (searchWrapper) searchWrapper.classList.remove('has-text');
         filterBtns.forEach(b => b.classList.remove('active'));
         targetBtn.classList.add('active');
+
+        const url = new URL(window.location);
+        url.searchParams.set('filter', slugify(skillName));
+        window.history.replaceState({}, '', url);
+
         filterGallery();
+        updateInterfaceState();
         if (suggestionsPanel) suggestionsPanel.style.display = 'none';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 };
 
 /**
- * FEATURE: Dynamic Search Suggestions (Including Experience)
+ * FEATURE: Dynamic Search Suggestions
  */
 function showSuggestions(query) {
     if (!suggestionsPanel) return;
@@ -82,14 +144,12 @@ function showSuggestions(query) {
     const matches = [];
     const lowerQuery = query.toLowerCase();
 
-    // 1. Matches for Names
     creatives.forEach(p => {
         if (p.name.toLowerCase().includes(lowerQuery)) {
             matches.push({ label: p.name, type: 'Creative', value: p.name });
         }
     });
 
-    // 2. Matches for Unique Skills
     const uniqueSkills = [...new Set(creatives.flatMap(p => p.skills))];
     uniqueSkills.forEach(skill => {
         if (skill.toLowerCase().includes(lowerQuery)) {
@@ -97,7 +157,6 @@ function showSuggestions(query) {
         }
     });
 
-    // 3. Matches for Experience
     const experiences = [...new Set(creatives.map(p => p.experience).filter(v => v != null))];
     experiences.forEach(exp => {
         const expStr = exp.toString();
@@ -106,7 +165,6 @@ function showSuggestions(query) {
         }
     });
 
-    // 4. Matches for Unique Locations
     const uniqueLocations = [...new Set(creatives.map(p => p.location).filter(Boolean))];
     uniqueLocations.forEach(loc => {
         if (loc.toLowerCase().includes(lowerQuery)) {
@@ -139,11 +197,9 @@ window.selectSuggestion = (value) => {
     if (searchWrapper) searchWrapper.classList.add('has-text');
     if (suggestionsPanel) suggestionsPanel.style.display = 'none';
     filterGallery();
+    updateInterfaceState();
 };
 
-/**
- * FEATURE: Automated Expiry Logic
- */
 function isUserPro(person) {
     if (!person.expiryDate) return false;
     const today = new Date();
@@ -203,13 +259,9 @@ function updateFilterCounts(currentSearchQuery = "") {
     });
 }
 
-/**
- * OPTIMIZATION 2: STRING BUILDING FOR DISPLAYCREATIVES
- * Building a single HTML string and injecting it via requestAnimationFrame 
- * significantly reduces browser paint time and layout thrashing.
- */
 function renderCards(data) {
     currentFilteredData = data; 
+    const query = searchInput.value;
     counter.innerText = `Showcasing ${data.length} curated Filipino creatives`;
 
     if (data.length === 0) {
@@ -223,29 +275,33 @@ function renderCards(data) {
         return;
     }
 
-    // Optimization: Efficient string mapping
     const cardsHTML = data.map((person, index) => {
         const isPro = isUserPro(person);
         const hasLongBio = isPro && person.longBio && person.longBio.trim() !== "";
-        const badgesHTML = person.skills.map(skill =>
-            `<button class="badge" style="${getSkillStyle(skill)}; cursor: pointer; border: none; font-family: inherit;" onclick="event.stopPropagation(); window.filterBySkill('${skill}')">${skill}</button>`
-        ).join('');
+        
+        const highlightedName = highlightText(person.name, query);
+        const highlightedBio = highlightText(person.bio, query);
+        const highlightedLongBio = hasLongBio ? highlightText(person.longBio, query) : "";
+
+        const badgesHTML = person.skills.map(skill => {
+            const highlightedSkill = highlightText(skill, query);
+            return `<button class="badge" style="${getSkillStyle(skill)}; cursor: pointer; border: none; font-family: inherit;" onclick="event.stopPropagation(); window.filterBySkill('${skill}')">${highlightedSkill}</button>`;
+        }).join('');
+
         const verifiedBadge = isPro ? VERIFIED_STAR_SVG : '';
         const hireButton = isPro ? `<a href="mailto:${person.email}?subject=Inquiry: Collaboration" onclick="event.stopPropagation();" class="btn-hire">Work with Me</a>` : '';
 
-        // OPTIMIZATION 3: IMAGE LAZY LOADING
-        // Added loading="lazy" and decoding="async" for smoother scrolling
         return `
             <div class="card ${isPro ? 'is-pro' : ''}" style="animation-delay: ${index * 0.04}s; cursor: pointer;" data-name="${person.name}">
                 <div class="profile-img">
                     <img src="${person.image}" alt="${person.name}" loading="lazy" decoding="async">
                 </div>
                 <div class="badge-container">${badgesHTML}</div>
-                <h3 style="display: flex; align-items: center; gap: 4px;">${person.name} ${verifiedBadge}</h3>
+                <h3 style="display: flex; align-items: center; gap: 4px;">${highlightedName} ${verifiedBadge}</h3>
                 <div class="bio-wrapper">
                     <p class="bio">
-                        ${person.bio}
-                        ${hasLongBio ? `<span class="more-text" id="more-${index}">${person.longBio}</span>` : ''}
+                        ${highlightedBio}
+                        ${hasLongBio ? `<span class="more-text" id="more-${index}">${highlightedLongBio}</span>` : ''}
                     </p>
                     ${hasLongBio ? `<button class="read-more-btn" onclick="event.stopPropagation(); window.toggleBio(${index}, this)">Read More</button>` : ''}
                 </div>
@@ -260,7 +316,6 @@ function renderCards(data) {
         `;
     }).join('');
 
-    // Optimization: Batch DOM update
     window.requestAnimationFrame(() => {
         directory.innerHTML = cardsHTML;
     });
@@ -337,16 +392,13 @@ function openQuickView(person) {
     document.body.style.overflow = 'hidden';
 }
 
-// Helper at the bottom of script.js
 window.copyProfileLink = (name) => {
-    const profileUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
+    const profileUrl = `${window.location.origin}${window.location.pathname}?name=${slugify(name)}`;
     navigator.clipboard.writeText(profileUrl).then(() => {
         const btn = document.querySelector('.btn-copy-link');
         const span = btn.querySelector('span');
-        
         btn.classList.add('copied');
         span.innerText = "Copied!";
-        
         setTimeout(() => {
             btn.classList.remove('copied');
             span.innerText = "Copy Link";
@@ -357,14 +409,11 @@ window.copyProfileLink = (name) => {
 const closeDrawer = () => {
     drawer.classList.remove('is-open');
     document.body.style.overflow = 'auto';
-
-    // Cleanup: Remove ?name= from the URL without refreshing the page
     const url = new URL(window.location);
     url.searchParams.delete('name');
     window.history.replaceState({}, '', url);
 };
 
-// Touch handling for drawer
 let touchStartY = 0;
 if (drawerContent) {
     drawerContent.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
@@ -382,10 +431,6 @@ window.toggleBio = (index, btn) => {
     }
 };
 
-/**
- * OPTIMIZATION 4: EFFICIENT FILTERING LOGIC
- * Re-structured filter to perform fewer operations per array element.
- */
 function filterGallery() {
     const query = searchInput.value.toLowerCase().trim();
     const activeBtn = document.querySelector('.filter-btn.active');
@@ -393,7 +438,6 @@ function filterGallery() {
     const isFilterAll = activeFilter === 'all';
 
     const filtered = displayedCreatives.filter(person => {
-        // Optimized search check
         const matchesSearch = !query || 
             person.name.toLowerCase().includes(query) ||
             person.bio.toLowerCase().includes(query) ||
@@ -403,8 +447,6 @@ function filterGallery() {
             (person.experience && person.experience.toString().includes(query));
 
         if (!matchesSearch) return false;
-
-        // Optimized filter check
         return isFilterAll || person.skills.some(skill => skill.toLowerCase() === activeFilter.toLowerCase());
     });
 
@@ -413,37 +455,52 @@ function filterGallery() {
 }
 
 window.clearSearch = () => {
+    // 1. Reset inputs
     searchInput.value = '';
     if (searchWrapper) searchWrapper.classList.remove('has-text'); 
+    
+    // 2. Reset category buttons
     filterBtns.forEach(b => b.classList.remove('active'));
     const allBtn = document.querySelector('[data-filter="all"]');
     if (allBtn) allBtn.classList.add('active');
+    
+    // 3. Clear suggestions
     if (suggestionsPanel) suggestionsPanel.style.display = 'none';
+
+    // 4. Update URL without refreshing or jumping
+    const url = new URL(window.location);
+    url.searchParams.delete('filter');
+    url.searchParams.delete('name');
+    window.history.replaceState({}, '', url);
+
+    // 5. Re-run the filter logic
     filterGallery();
-    searchInput.focus();
+    updateInterfaceState();
+
+    // REMOVED: window.scrollTo({ top: 0 }) 
+    // This keeps the user at their current scroll position
 };
 
-/**
- * IMPLEMENTATION: DEBOUNCED SEARCH INPUT
- */
 const debouncedFilter = debounce(() => {
     filterGallery();
 }, 150);
 
 searchInput.addEventListener('input', (e) => {
     const val = e.target.value;
-    
     if (searchWrapper) {
         val.length > 0 ? searchWrapper.classList.add('has-text') : searchWrapper.classList.remove('has-text');
     }
-
     showSuggestions(val);
     debouncedFilter();
+    updateInterfaceState();
 });
 
-// Listener for the internal "Clear" text button
 if (clearSearchBtn) {
     clearSearchBtn.addEventListener('click', window.clearSearch);
+}
+
+if (clearFiltersBtn) {
+    clearFiltersBtn.addEventListener('click', window.clearSearch);
 }
 
 document.addEventListener('click', (e) => {
@@ -456,9 +513,39 @@ filterBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
         if (btn.classList.contains('active')) return;
+
+        const filter = btn.dataset.filter;
+        const url = new URL(window.location);
+
+        if (filter === 'all') {
+            url.searchParams.delete('filter');
+        } else {
+            url.searchParams.set('filter', slugify(filter));
+        }
+        window.history.replaceState({}, '', url);
+
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        filterGallery();
+        filterGallery(); 
+        updateInterfaceState();
+    });
+});
+
+shareCategoryBtn?.addEventListener('click', () => {
+    const activeBtn = document.querySelector('.filter-btn.active');
+    if (!activeBtn) return;
+    const filterValue = activeBtn.dataset.filter;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?filter=${slugify(filterValue)}`;
+
+    navigator.clipboard.writeText(shareUrl).then(() => {
+        const span = shareCategoryBtn.querySelector('span');
+        const originalText = span.innerText;
+        shareCategoryBtn.classList.add('copied');
+        span.innerText = "Link Copied!";
+        setTimeout(() => {
+            shareCategoryBtn.classList.remove('copied');
+            updateInterfaceState();
+        }, 2000);
     });
 });
 
@@ -500,14 +587,11 @@ function animateValue(obj, start, end, duration) {
 
 function initializeGallery() {
     showSkeletons();
-    
     setTimeout(() => {
-        // 1. Data Preparation
         const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
         const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
         displayedCreatives = [...activePros, ...regulars];
 
-        // 2. Counter Animations
         const allSkills = displayedCreatives.flatMap(p => p.skills);
         const uniqueSpecialties = [...new Set(allSkills.map(s => s.toLowerCase()))].length;
         const totalCountEl = document.getElementById('totalCount');
@@ -518,55 +602,47 @@ function initializeGallery() {
             setTimeout(() => animateValue(specialtyCountEl, 0, uniqueSpecialties, 1000), 200);
         }
 
-        // 3. Render with Motion logic
         renderCards(displayedCreatives);
-        
-        // --- ADDED: Check URL for a shared profile name ---
         checkDeepLink();
-        
-        // 4. Initialize Motion Observers
         updateFilterCounts();
+        updateInterfaceState();
         initStickyObserver();
         initFooterObserver();
         initScrollReveal(); 
-        
     }, 800);
 }
 
-/**
- * HELPER: Checks URL for ?name= and opens the corresponding drawer
- */
 function checkDeepLink() {
     const urlParams = new URLSearchParams(window.location.search);
-    const personName = urlParams.get('name');
+    const personSlug = urlParams.get('name');
+    const filterSlug = urlParams.get('filter');
     
-    if (personName) {
-        const person = displayedCreatives.find(p => p.name === personName);
+    if (filterSlug) {
+        const targetBtn = Array.from(filterBtns).find(btn => 
+            slugify(btn.dataset.filter) === filterSlug.toLowerCase()
+        );
+        if (targetBtn) targetBtn.click();
+    }
+
+    if (personSlug) {
+        const person = displayedCreatives.find(p => slugify(p.name) === personSlug.toLowerCase());
         if (person) {
-            // Tiny delay to ensure DOM and animations are ready
             setTimeout(() => openQuickView(person), 150);
         }
     }
 }
 
 function initScrollReveal() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px"
-    };
-
+    const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // Trigger the CSS animation
                 entry.target.style.opacity = "1";
                 entry.target.style.transform = "translateY(0)";
                 observer.unobserve(entry.target); 
             }
         });
     }, observerOptions);
-
-    // Apply to all cards
     document.querySelectorAll('.card').forEach(card => observer.observe(card));
 }
 
@@ -581,7 +657,6 @@ function initStickyObserver() {
 
 document.addEventListener('DOMContentLoaded', initializeGallery);
 
-// Modal Management
 const modal = document.getElementById("pricingModal");
 const openModalBtn = document.getElementById("openPricing");
 const ctaOpenModalBtn = document.getElementById("ctaOpenPricing");
