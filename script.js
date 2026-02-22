@@ -578,6 +578,7 @@ function animateValue(obj, start, end, duration) {
 
 function initializeGallery() {
     showSkeletons();
+    renderSpotlightPill()
     setTimeout(() => {
         const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
         const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
@@ -674,3 +675,46 @@ window.addEventListener('click', (event) => {
     if (event.target === modal) closeModal();
     if (event.target === aboutModal) closeAbout();
 });
+
+/**
+ * FEATURE: Spotlight Pill
+ * Renders a compact, high-info pill for a featured creator
+ */
+function renderSpotlightPill() {
+    const container = document.getElementById('spotlightContainer');
+    // Find the person marked for spotlight in the source data
+    const person = creatives.find(p => p.isSpotlight);
+
+    if (!person || !container) return;
+
+    // Extracting info for the "extra info" section
+    const primarySkill = person.skills[0]; 
+    const yearsExp = person.experience || 1;
+
+    container.innerHTML = `
+        <div class="spotlight-pill" onclick="window.openQuickViewByName('${person.name}')" title="View Featured Profile">
+            <img src="${person.image}" alt="${person.name}" loading="lazy">
+            <span class="spotlight-label">Spotlight</span>
+            <span class="spotlight-name">${person.name}</span>
+            
+            <div class="spotlight-meta">
+                <span class="spotlight-role">${primarySkill}</span>
+                <span class="spotlight-exp">${yearsExp}y+ Exp</span>
+                <span class="spotlight-arrow">→</span>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * HELPER: Open QuickView by Name
+ * Bridging the Spotlight click to the existing Drawer logic
+ */
+window.openQuickViewByName = (name) => {
+    // We search the source 'creatives' to ensure we find them even if filtered out of the main grid
+    const person = creatives.find(p => p.name === name);
+    if (person) {
+        // openQuickView is the function already defined in your script.js
+        openQuickView(person);
+    }
+};
