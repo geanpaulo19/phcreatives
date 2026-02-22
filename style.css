@@ -1568,3 +1568,114 @@ footer {
     border-color: #10b981;
     color: white;
 }
+
+/* Smart Highlighting Styles */
+mark {
+    background: rgba(99, 102, 241, 0.3); /* Match your --accent color with transparency */
+    color: #fff;
+    padding: 0 2px;
+    border-radius: 4px;
+    font-weight: 600;
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);
+    text-shadow: none;
+}
+
+/* Ensure the highlighted text inside badges remains readable */
+.badge mark {
+    background: rgba(255, 255, 255, 0.2);
+    color: inherit;
+    box-shadow: none;
+}
+
+/* Floating Share Category Button */
+.share-category-fab {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    
+    /* Animation State */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.share-category-fab.visible {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.share-category-fab:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.5);
+}
+
+.share-category-fab.copied {
+    background: #10b981;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+/* On mobile, move it slightly higher if you have a footer or FAB on the right */
+@media (max-width: 768px) {
+    .share-category-fab {
+        bottom: 20px;
+        left: 20px;
+        padding: 10px 16px;
+        font-size: 0.8rem;
+    }
+}
+
+.clear-filters-btn {
+    display: none; /* Hidden by default */
+    align-items: center;
+    gap: 6px;
+    background: rgba(239, 68, 68, 0.1); /* Subtle red tint */
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    padding: 8px 16px; /* Slightly more horizontal padding for the pill shape */
+    border-radius: 50px; /* Matched to filter-btn pill shape */
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 12px; /* Balanced spacing before the first category */
+    white-space: nowrap;
+}
+
+/* Show button when this class is added via JS */
+.clear-filters-btn.is-active {
+    display: flex;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.clear-filters-btn:hover {
+    background: #ef4444;
+    color: white;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+@keyframes popIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.8) translateX(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1) translateX(0); 
+    }
+}
