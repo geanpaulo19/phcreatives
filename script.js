@@ -317,7 +317,18 @@ function openQuickView(person) {
                 ${person.email ? `<a href="mailto:${person.email}" class="social-link-item">Email</a>` : ''}
             </div>
         </div>
-        <a href="mailto:${person.email}" class="btn-hire" style="margin-top: 3rem; padding: 16px; font-size: 0.9rem;">
+
+        <div class="share-section">
+            <div class="share-content">
+                <p class="share-text">Spread the word about ${person.name.split(' ')[0]}'s work</p>
+                <button class="btn-copy-link" onclick="window.copyProfileLink('${person.name}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    <span>Copy Link</span>
+                </button>
+            </div>
+        </div>
+
+        <a href="mailto:${person.email}" class="btn-hire" style="margin-top: 1rem; padding: 16px; font-size: 0.9rem;">
             Hire ${person.name.split(' ')[0]}
         </a>
     `;
@@ -326,9 +337,31 @@ function openQuickView(person) {
     document.body.style.overflow = 'hidden';
 }
 
+// Helper at the bottom of script.js
+window.copyProfileLink = (name) => {
+    const profileUrl = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
+    navigator.clipboard.writeText(profileUrl).then(() => {
+        const btn = document.querySelector('.btn-copy-link');
+        const span = btn.querySelector('span');
+        
+        btn.classList.add('copied');
+        span.innerText = "Copied!";
+        
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            span.innerText = "Copy Link";
+        }, 2000);
+    });
+};
+
 const closeDrawer = () => {
     drawer.classList.remove('is-open');
     document.body.style.overflow = 'auto';
+
+    // Cleanup: Remove ?name= from the URL without refreshing the page
+    const url = new URL(window.location);
+    url.searchParams.delete('name');
+    window.history.replaceState({}, '', url);
 };
 
 // Touch handling for drawer
@@ -488,13 +521,32 @@ function initializeGallery() {
         // 3. Render with Motion logic
         renderCards(displayedCreatives);
         
+        // --- ADDED: Check URL for a shared profile name ---
+        checkDeepLink();
+        
         // 4. Initialize Motion Observers
         updateFilterCounts();
         initStickyObserver();
         initFooterObserver();
-        initScrollReveal(); // New motion trigger
+        initScrollReveal(); 
         
     }, 800);
+}
+
+/**
+ * HELPER: Checks URL for ?name= and opens the corresponding drawer
+ */
+function checkDeepLink() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const personName = urlParams.get('name');
+    
+    if (personName) {
+        const person = displayedCreatives.find(p => p.name === personName);
+        if (person) {
+            // Tiny delay to ensure DOM and animations are ready
+            setTimeout(() => openQuickView(person), 150);
+        }
+    }
 }
 
 function initScrollReveal() {
