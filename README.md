@@ -15,7 +15,6 @@
 * **QuickView Drawer:** A smooth-sliding side drawer for deep-diving into talent profiles without losing your place in the grid, complete with mobile-native swipe-to-dismiss support.
 * **Verified Talent System:** Automated "Pro" status detection with unique visual signatures, including neon glowing borders, gold verified stars, and expanded "Read More" bios.
 * **Deep-Linking Engine:** URL-based filtering and profile sharing. Users can share specific categories or individual profiles via automatically generated slugs.
-* **Intelligent UI State:** A dynamic "Reset" button that slides in only when filters are active, ensuring a clean, zero-clutter interface.
 * **Performance Optimized:** Skeleton loading states, debounced search logic, and `requestAnimationFrame` rendering for butter-smooth scrolling.
 
 ---
