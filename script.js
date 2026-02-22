@@ -500,7 +500,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Update the Filter Listener to trigger the intelligence
 filterBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -508,21 +507,24 @@ filterBtns.forEach(btn => {
 
         const filter = btn.dataset.filter;
         const url = new URL(window.location);
-        filter === 'all' ? url.searchParams.delete('filter') : url.searchParams.set('filter', slugify(filter));
+        
+        // Update URL and History
+        if (filter === 'all') {
+            url.searchParams.delete('filter');
+        } else {
+            url.searchParams.set('filter', slugify(filter));
+        }
         window.history.replaceState({}, '', url);
 
+        // Update Active Button State
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
+        // Refresh Gallery and UI Components only
         filterGallery(); 
         updateInterfaceState();
 
-        // TRIGGER INTELLIGENCE
-        renderSpotlightPill();
-        
-        // Visual Feedback for update
-        const pill = document.querySelector('.spotlight-pill');
-        if (pill) pill.style.animation = 'spotlightUpdate 0.5s ease';
+        // Note: renderSpotlightPill is NOT called here to keep the daily person locked.
     });
 });
 
@@ -681,41 +683,29 @@ window.addEventListener('click', (event) => {
 });
 
 /**
- * FEATURE: Balanced Merit-Based Spotlight
- * Features members based on a mix of Pro status, Experience, and Skill relevance.
+ * FEATURE: Balanced Merit-Based Global Spotlight
+ * Features one member per day site-wide based on Experience, Pro status, and Profile Quality.
+ * Locked to a 24-hour cycle regardless of filtering.
  */
 function renderSpotlightPill() {
     const container = document.getElementById('spotlightContainer');
     if (!container || !creatives.length) return;
 
-    const activeBtn = document.querySelector('.filter-btn.active');
-    const currentFilter = activeBtn ? activeBtn.textContent.trim() : 'All';
-
-    // 1. Calculate Merit Scores for everyone
+    // 1. Calculate Merit Scores (Global weighting, no filter bias)
     const scoredPool = creatives.map((person, index) => {
-        let score = 10; // Base score for everyone
+        let score = 10; // Base tickets for everyone
 
-        // CRITERIA A: Experience (Merit-based)
-        // High experience is a huge factor (e.g., 10 years adds 30 points)
+        // MERIT: Experience is high priority (e.g., 10 years = 40 points)
         if (person.experience) {
-            score += Math.floor(person.experience * 3); 
+            score += Math.floor(person.experience * 4); 
         }
 
-        // CRITERIA B: Pro Status (Support-based)
-        // Adds a fixed bonus, but can be outweighed by a high-experience Non-Pro
+        // STATUS: Pro members get a nudge
         if (isUserPro(person)) {
-            score += 25; 
+            score += 20; 
         }
 
-        // CRITERIA C: Skill Relevance (Context-based)
-        // Does this person match what the user is looking at right now?
-        const isMatch = currentFilter === 'All' || person.skills.includes(currentFilter);
-        if (isMatch) {
-            score += 40; 
-        }
-
-        // CRITERIA D: Completeness (Quality-based)
-        // Reward creators who have filled out their featured work
+        // QUALITY: Reward profiles with more projects
         if (person.featuredWork && person.featuredWork.length > 0) {
             score += (person.featuredWork.length * 2);
         }
@@ -723,18 +713,15 @@ function renderSpotlightPill() {
         return { index, score, person };
     });
 
-    // 2. Total Score for the pool
     const totalScore = scoredPool.reduce((sum, item) => sum + item.score, 0);
 
-    // 3. Daily Seed (Date + Filter)
+    // 2. Global 24-Hour Seed (Strictly date-based)
     const today = new Date();
     const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-    const filterHash = currentFilter.split('').reduce((a, b) => (a << 5) - a + b.charCodeAt(0), 0);
-    const finalSeed = Math.abs(dateSeed + filterHash);
 
-    // 4. Deterministic Selection
+    // 3. Deterministic Selection (LCG Algorithm)
     const lcg = (seed) => (seed * 16807) % 2147483647;
-    let selectionValue = lcg(finalSeed) % totalScore;
+    let selectionValue = lcg(dateSeed) % totalScore;
     
     let winner = scoredPool[0].person;
     for (const item of scoredPool) {
@@ -745,23 +732,21 @@ function renderSpotlightPill() {
         selectionValue -= item.score;
     }
 
-    // 5. Smart Labels based on the "Winning" factor
+    // 4. Label Logic (Based on the winner's specific highlights)
     let label = "Daily Spotlight";
     let isDiscovery = false;
 
-    if (currentFilter !== 'All' && winner.skills.includes(currentFilter)) {
-        label = `Top in ${currentFilter}`;
-        isDiscovery = true;
-    } else if (winner.experience >= 10) {
+    if (winner.experience >= 10) {
         label = "Industry Expert";
+        isDiscovery = true; 
     } else if (isUserPro(winner)) {
         label = "Verified Creator";
     }
 
-    // 6. Final Render
+    // 5. Render
     container.innerHTML = `
         <div class="spotlight-pill" onclick="window.openQuickViewByName('${winner.name}')">
-            <img src="${winner.image}" alt="${winner.name}">
+            <img src="${winner.image}" alt="${winner.name}" loading="lazy">
             <span class="spotlight-label ${isDiscovery ? 'is-discovery' : ''}">${label}</span>
             <span class="spotlight-name">${winner.name}</span>
             <div class="spotlight-meta">
@@ -775,14 +760,10 @@ function renderSpotlightPill() {
 
 /**
  * HELPER: Open QuickView by Name
- * Must be attached to window for HTML onclick to work
  */
 window.openQuickViewByName = (name) => {
-    console.log("Spotlight clicked for:", name); // Debug line
     const person = creatives.find(p => p.name === name);
     if (person) {
         openQuickView(person);
-    } else {
-        console.error("Creative not found:", name);
     }
 };
