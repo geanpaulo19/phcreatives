@@ -743,7 +743,7 @@ function renderSpotlightPill() {
     }
 
     // 4. Label Logic (Based on the winner's specific highlights)
-    let label = "Daily Spotlight";
+    let label = "Spotlight";
     let isDiscovery = false;
 
     if (winner.experience >= 10) {
