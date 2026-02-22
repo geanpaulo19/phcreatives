@@ -43,7 +43,6 @@ export const creatives = [
     },
     {
         name: "Dana Praise Guerrero",
-        isSpotlight: true,
         email: "danapraiseguerrero@gmail.com",
         skills: ["Brand & Identity", "Graphic Design", "Frontend"],
         location: "Remote",
