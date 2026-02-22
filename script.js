@@ -583,27 +583,37 @@ function animateValue(obj, start, end, duration) {
 }
 
 function initializeGallery() {
+    // 1. IMMEDIATE: Show the UI shell so the page doesn't look empty
     showSkeletons();
-    renderSpotlightPill()
+    renderSpotlightPill(); 
+
+    // 2. DEFERRED: Handle heavy data processing and animations after a short delay
     setTimeout(() => {
+        // Prepare the master list (Pros first, then Regulars)
         const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
         const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
         displayedCreatives = [...activePros, ...regulars];
 
+        // Calculate stats for the counter animations
         const allSkills = displayedCreatives.flatMap(p => p.skills);
         const uniqueSpecialties = [...new Set(allSkills.map(s => s.toLowerCase()))].length;
+        
         const totalCountEl = document.getElementById('totalCount');
         const specialtyCountEl = document.getElementById('specialtyCount');
 
+        // Trigger numerical animations
         if (totalCountEl) animateValue(totalCountEl, 0, displayedCreatives.length, 1200);
         if (specialtyCountEl) {
             setTimeout(() => animateValue(specialtyCountEl, 0, uniqueSpecialties, 1000), 200);
         }
 
+        // Final UI assembly
         renderCards(displayedCreatives);
         checkDeepLink();
         updateFilterCounts();
         updateInterfaceState();
+        
+        // Initialize Observers
         initStickyObserver();
         initFooterObserver();
         initScrollReveal(); 
