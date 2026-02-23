@@ -926,7 +926,7 @@ footer {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  height: 85vh;
+  height: 80vh;
   background: #111318;
   border-top: 1px solid var(--border);
   border-radius: 32px 32px 0 0;
