@@ -19,7 +19,7 @@ export const creatives = [
             { title: "PayPal Fees Calculator", url: "https://ppfees.netlify.app/" }
         ],
         links: { website: "https://geanpaulo.com/", github: "https://github.com/geanpaulo19" },
-        expiryDate: "2100-02-16" 
+        expiryDate: "2026-02-16" 
     },
     {
         name: "Julius Natividad",
