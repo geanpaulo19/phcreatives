@@ -94,7 +94,7 @@ export const creatives = [
         skills: ["Brand & Identity", "Graphic Design", "UI/UX Design", "Motion Graphics"],
         location: "Batangas, PH",
         experience: 7,
-        bio: "Crafting Logos, Brewing Ideas, and Annoying Perfectionist.",
+        bio: "Crafting Logos, Brewing Ideas, and an Annoying Perfectionist.",
         image: "images/ceriaca.png",
         featuredWork: [
             { title: "Print Designs", url: "https://tinyurl.com/graphicnprintdesign" },
