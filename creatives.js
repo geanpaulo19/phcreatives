@@ -150,5 +150,18 @@ export const creatives = [
             { title: "Art Burst Social Media Graphic", url: "https://www.facebook.com/share/p/1AsCXLwven/" },
         ],
         links: { portfolio: "https://drive.google.com/file/d/1WmtFZtrBUIfANDHMIeTQoPHPKfAeI6dh/view?usp=drivesdk" }
+    },
+    {
+        name: "Joshua Colin",
+        email: "blackmagecrypt1999@gmail.com",
+        skills: ["Graphic Design"],
+        location: "Metro Manila, PH",
+        experience: 9,
+        bio: "Helping brands stand out with high-impact visuals and bespoke illustration.",
+        image: "images/joshua.png",
+        featuredWork: [
+            { title: "Death Metal Illustration", url: "https://www.behance.net/rakebrutalarts" }
+        ],
+        links: { portfolio: "https://www.behance.net/rakebrutalarts", facebook: "https://www.facebook.com/decapitatedfetuscorpse", instagram: "https://www.instagram.com/rakebrutalillustration", linkedin: "https://www.linkedin.com/in/joshua-colin" }
     }
 ];
