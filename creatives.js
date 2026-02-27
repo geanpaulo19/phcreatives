@@ -142,7 +142,7 @@ export const creatives = [
         skills: ["Graphic Design", "Brand & Identity", "Motion Graphics", "Frontend"],
         location: "Remote",
         experience: 1,
-        bio: "Efficient freelance designer and editor delivering high-impact branding and video for global clients. I combine creative speed with an obsessive eye for detail to help brands stand out.",
+        bio: "Freelance designer and editor delivering high-impact branding and video for global brands. Creative speed meets obsessive detail.",
         image: "images/erianne.png",
         featuredWork: [
             { title: "PFL Social Media Graphic", url: "https://www.instagram.com/p/DP8BxFrDrhE/?igsh=OHA4aTZ6MzRkbXNt" },
