@@ -87,5 +87,22 @@ export const creatives = [
         bio: "Freelance Graphic Designer crafting high-impact visual identities and modern brand stories.",
         image: "images/jessie.png",
         links: { facebook: "https://www.facebook.com/share/1BBPu6hVPo/?mibextid=wwXIfr", behance: "https://www.behance.net/jessiebedia", linkedin: "https://www.linkedin.com/in/jjkultur" },
+    },
+        {
+        name: "Lester Ceriaca",
+        email: "creativistx13@gmail.com",
+        skills: ["Brand & Identity", "Graphic Design", "UI/UX Design", "Motion Graphics"],
+        location: "Batangas, PH",
+        experience: 7,
+        bio: "Crafting Logos, Brewing Ideas, and Annoying Perfectionist.",
+        image: "images/ceriaca.png",
+        featuredWork: [
+            { title: "Print Designs", url: "https://tinyurl.com/graphicnprintdesign" },
+            { title: "Ecom Designs", url: "https://tinyurl.com/lesterecom" },
+            { title: "Web Designs", url: "https://tinyurl.com/lesterui" },
+            { title: "Branding", url: "https://tinyurl.com/lesterlogoworks" },
+            { title: "Social Media", url: "https://tinyurl.com/lesterpubmats" },
+        ],
+        links: { porfolio: "https://tinyurl.com/lesterceriacaportfolio", facebook: "https://www.facebook.com/theannoyingbrand", instagram: "https://www.instagram.com/theannoyingbrand/", linkedin: "https://www.linkedin.com/in/lester-ceriaca", behance: "https://www.behance.net/creativistx" },
     }
 ];
