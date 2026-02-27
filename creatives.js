@@ -125,5 +125,15 @@ export const creatives = [
         bio: "Freelance designer bridging the gap between dynamic eSports visuals and refined editorial layouts.",
         image: "images/aubrey.png",
         links: { portfolio: "https://portfoliobybry.carrd.co", facebook: "https://www.facebook.com/bry.bry1110", instagram: "https://www.instagram.com/bry.bybry?igsh=MXFtbW9haHlucnNsMg%3D%3D&utm_source=qr", X: "https://x.com/intowinteo?s=21" }
+    },
+    {
+        name: "Ginno Chavez",
+        email: "gxcdigitalph@gmail.com",
+        skills: ["Graphic Design", "Brand & Identity"],
+        location: "Manila, PH",
+        experience: 5,
+        bio: "Elevating small brands one logo at a time.",
+        image: "images/ginno.png",
+        links: { facebook: "https://www.facebook.com/gnomedesign" }
     }
 ];
