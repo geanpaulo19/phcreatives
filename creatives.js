@@ -135,5 +135,20 @@ export const creatives = [
         bio: "Elevating small brands one logo at a time.",
         image: "images/ginno.png",
         links: { facebook: "https://www.facebook.com/gnomedesign" }
+    },
+    {
+        name: "Erianne Leigh Henson",
+        email: "erianneleigh.creative@gmail.com",
+        skills: ["Graphic Design", "Brand & Identity", "Motion Graphics", "Frontend"],
+        location: "Remote",
+        experience: 1,
+        bio: "Efficient freelance designer and editor delivering high-impact branding and video for global clients. I combine creative speed with an obsessive eye for detail to help brands stand out.",
+        image: "images/erianne.png",
+        featuredWork: [
+            { title: "PFL Social Media Graphic", url: "https://www.instagram.com/p/DP8BxFrDrhE/?igsh=OHA4aTZ6MzRkbXNt" },
+            { title: "Agama Logo", url: "https://www.facebook.com/share/18Nh5A31Fj/" },
+            { title: "Art Burst Social Media Graphic", url: "https://www.facebook.com/share/p/1AsCXLwven/" },
+        ],
+        links: { portfolio: "https://drive.google.com/file/d/1WmtFZtrBUIfANDHMIeTQoPHPKfAeI6dh/view?usp=drivesdk" }
     }
 ];
