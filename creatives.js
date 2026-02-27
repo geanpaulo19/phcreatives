@@ -103,7 +103,7 @@ export const creatives = [
             { title: "Branding", url: "https://tinyurl.com/lesterlogoworks" },
             { title: "Social Media", url: "https://tinyurl.com/lesterpubmats" },
         ],
-        links: { porfolio: "https://tinyurl.com/lesterceriacaportfolio", facebook: "https://www.facebook.com/theannoyingbrand", instagram: "https://www.instagram.com/theannoyingbrand/", linkedin: "https://www.linkedin.com/in/lester-ceriaca", behance: "https://www.behance.net/creativistx" },
+        links: { portfolio: "https://tinyurl.com/lesterceriacaportfolio", facebook: "https://www.facebook.com/theannoyingbrand", instagram: "https://www.instagram.com/theannoyingbrand/", linkedin: "https://www.linkedin.com/in/lester-ceriaca", behance: "https://www.behance.net/creativistx" },
         expiryDate: "2026-03-06" 
     },
     {
@@ -115,5 +115,15 @@ export const creatives = [
         bio: "Transforming ideas into visuals through design and photo editing, while constantly pushing the boundaries of my craft.",
         image: "images/pinote.png",
         links: { facebook: "https://www.facebook.com/ashlleysundang/", instagram: "https://www.instagram.com/ashlleysundang/", linkedin: "https://www.linkedin.com/in/ashlley-marie-pinote/" }
+    },
+    {
+        name: "Bry Garay",
+        email: "garay.aubrey10@gmail.com",
+        skills: ["Graphic Design", "Brand & Identity"],
+        location: "Remote",
+        experience: 2,
+        bio: "Freelance designer bridging the gap between dynamic eSports visuals and refined editorial layouts.",
+        image: "images/aubrey.png",
+        links: { portfolio: "https://portfoliobybry.carrd.co", facebook: "https://www.facebook.com/bry.bry1110", instagram: "https://www.instagram.com/bry.bybry?igsh=MXFtbW9haHlucnNsMg%3D%3D&utm_source=qr", X: "https://x.com/intowinteo?s=21" }
     }
 ];
