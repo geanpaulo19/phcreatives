@@ -29,7 +29,7 @@ export const creatives = [
         experience: 5,
         bio: "Creative strategist transforming brand visions into high-impact graphic identities and cinematic video content.",
         image: "images/julius.jpg",
-        links: { facebook: "https://www.facebook.com/julius.blanza.natividad" },
+        links: { facebook: "https://www.facebook.com/julius.blanza.natividad" }
     },
     {
         name: "Nicko Lamanilao",
@@ -39,7 +39,7 @@ export const creatives = [
         experience: 7,
         bio: "Crafting bold visuals and engaging videos that elevate brands.",
         image: "images/nicko.png",
-        links: { portfolio: "https://franckolamanilao.my.canva.site/nicko-lamanilao-portfolio", facebook: "https://www.facebook.com/francko2021", instagram: "https://instagram.com/francko101", linkedin: "https://www.linkedin.com/in/frances-nicko-lamanilao-216ba1285" },
+        links: { portfolio: "https://franckolamanilao.my.canva.site/nicko-lamanilao-portfolio", facebook: "https://www.facebook.com/francko2021", instagram: "https://instagram.com/francko101", linkedin: "https://www.linkedin.com/in/frances-nicko-lamanilao-216ba1285" }
     },
     {
         name: "Dana Praise Guerrero",
@@ -56,7 +56,7 @@ export const creatives = [
             { title: "Dodolove | E-commerce Design", url: "https://www.behance.net/gallery/204413189/Dodolove-E-commerce-Design" },
             { title: "Case Study | Lootgod", url: "https://www.behance.net/gallery/204714453/Case-Study-Lootgod" }
         ],
-        links: { portfolio: "https://www.behance.net/danapraise", linkedin: "https://www.linkedin.com/in/danapraiseguerrero", behance: "https://behance.net/danapraise" },
+        links: { portfolio: "https://www.behance.net/danapraise", linkedin: "https://www.linkedin.com/in/danapraiseguerrero", behance: "https://behance.net/danapraise" }
     },
     {
         name: "Jeffrey Celestino",
@@ -66,7 +66,7 @@ export const creatives = [
         experience: 5,
         bio: "Owner of JEVM Graphics Design, transforming brand ideas into clean, high-impact visual designs.",
         image: "images/jeffrey.png",
-        links: { portfolio: "https://jeffreycelestino.carrd.co", facebook: "https://www.facebook.com/jeffrey.celestino.55/", linkedin: "https://www.linkedin.com/in/jeffrey-celestino/", behance: "https://www.behance.net/jevmgraphicsdesign" },
+        links: { portfolio: "https://jeffreycelestino.carrd.co", facebook: "https://www.facebook.com/jeffrey.celestino.55/", linkedin: "https://www.linkedin.com/in/jeffrey-celestino/", behance: "https://www.behance.net/jevmgraphicsdesign" }
     },
     {
         name: "Lloyd Anthony Daza",
@@ -76,7 +76,7 @@ export const creatives = [
         experience: 6,
         bio: "Freelance Designer partnering with startups and established brands, both local and international.",
         image: "images/lloyd.png",
-        links: { facebook: "https://www.facebook.com/dyolldesigns", instagram: "https://www.instagram.com/dyoll_designs", behance: "https://www.behance.net/dyolldesigns" },
+        links: { facebook: "https://www.facebook.com/dyolldesigns", instagram: "https://www.instagram.com/dyoll_designs", behance: "https://www.behance.net/dyolldesigns" }
     },
     {
         name: "Jessie James Bedia",
@@ -86,9 +86,9 @@ export const creatives = [
         experience: 3,
         bio: "Freelance Graphic Designer crafting high-impact visual identities and modern brand stories.",
         image: "images/jessie.png",
-        links: { facebook: "https://www.facebook.com/share/1BBPu6hVPo/?mibextid=wwXIfr", behance: "https://www.behance.net/jessiebedia", linkedin: "https://www.linkedin.com/in/jjkultur" },
+        links: { facebook: "https://www.facebook.com/share/1BBPu6hVPo/?mibextid=wwXIfr", behance: "https://www.behance.net/jessiebedia", linkedin: "https://www.linkedin.com/in/jjkultur" }
     },
-        {
+    {
         name: "Lester Ceriaca",
         email: "creativistx13@gmail.com",
         skills: ["Brand & Identity", "Graphic Design", "UI/UX Design", "Motion Graphics"],
@@ -103,6 +103,16 @@ export const creatives = [
             { title: "Branding", url: "https://tinyurl.com/lesterlogoworks" },
             { title: "Social Media", url: "https://tinyurl.com/lesterpubmats" },
         ],
-        links: { porfolio: "https://tinyurl.com/lesterceriacaportfolio", facebook: "https://www.facebook.com/theannoyingbrand", instagram: "https://www.instagram.com/theannoyingbrand/", linkedin: "https://www.linkedin.com/in/lester-ceriaca", behance: "https://www.behance.net/creativistx" },
+        links: { porfolio: "https://tinyurl.com/lesterceriacaportfolio", facebook: "https://www.facebook.com/theannoyingbrand", instagram: "https://www.instagram.com/theannoyingbrand/", linkedin: "https://www.linkedin.com/in/lester-ceriaca", behance: "https://www.behance.net/creativistx" }
+    },
+    {
+        name: "Ashlley Marie Pinote",
+        email: "ashtrini32@gmail.com",
+        skills: ["Graphic Design", "Motion Graphics"],
+        location: "Remote",
+        experience: 3,
+        bio: "Transforming ideas into visuals through design and photo editing, while constantly pushing the boundaries of my craft.",
+        image: "images/pinote.png",
+        links: { facebook: "https://www.facebook.com/ashlleysundang/", instagram: "https://www.instagram.com/ashlleysundang/", linkedin: "https://www.linkedin.com/in/ashlley-marie-pinote/" }
     }
 ];
