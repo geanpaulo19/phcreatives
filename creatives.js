@@ -103,7 +103,8 @@ export const creatives = [
             { title: "Branding", url: "https://tinyurl.com/lesterlogoworks" },
             { title: "Social Media", url: "https://tinyurl.com/lesterpubmats" },
         ],
-        links: { porfolio: "https://tinyurl.com/lesterceriacaportfolio", facebook: "https://www.facebook.com/theannoyingbrand", instagram: "https://www.instagram.com/theannoyingbrand/", linkedin: "https://www.linkedin.com/in/lester-ceriaca", behance: "https://www.behance.net/creativistx" }
+        links: { porfolio: "https://tinyurl.com/lesterceriacaportfolio", facebook: "https://www.facebook.com/theannoyingbrand", instagram: "https://www.instagram.com/theannoyingbrand/", linkedin: "https://www.linkedin.com/in/lester-ceriaca", behance: "https://www.behance.net/creativistx" },
+        expiryDate: "2026-03-06" 
     },
     {
         name: "Ashlley Marie Pinote",
