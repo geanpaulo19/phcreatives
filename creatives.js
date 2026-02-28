@@ -163,5 +163,19 @@ export const creatives = [
             { title: "Death Metal Illustration", url: "https://www.behance.net/rakebrutalarts" }
         ],
         links: { portfolio: "https://www.behance.net/rakebrutalarts", facebook: "https://www.facebook.com/decapitatedfetuscorpse", instagram: "https://www.instagram.com/rakebrutalillustration", linkedin: "https://www.linkedin.com/in/joshua-colin" }
+    },
+    {
+        name: "Jan Michael Alcabasa",
+        email: "jm.alcabasa92@gmail.com",
+        skills: ["Graphic Design", "Brand & Identity"],
+        location: "Laguna, PH",
+        experience: 8,
+        bio: "A graphic designer and illustrator with 8+ years of experience in brand development and digital artwork. Specializes in custom illustrations, apparel design, and logo creation.",
+        image: "images/janmichael.png",
+        featuredWork: [
+            { title: "2025 Brand Identity Projects", url: "https://www.behance.net/gallery/232639143/2025-Logo-and-Brand-Design-Projects" },
+            { title: "Busy Bees Merch Design", url: "https://www.behance.net/gallery/204393251/Shirt-Design-for-Busy-Bees-Apparel" }
+        ],
+        links: { portfolio: "https://www.behance.net/SeventhSektor", facebook: "https://www.facebook.com/ItsMykeElep/", instagram: "https://www.instagram.com/seventhsektor/" }
     }
 ];
