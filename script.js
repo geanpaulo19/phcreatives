@@ -77,14 +77,12 @@ function debounce(func, delay) {
 
 /**
  * FEATURE: INTERFACE STATE UPDATER
- * Syncs the visibility of the Reset button and the Share FAB
  */
 function updateInterfaceState() {
     const query = searchInput.value.trim();
     const activeBtn = document.querySelector('.filter-btn.active');
     const filterValue = activeBtn ? activeBtn.dataset.filter : 'all';
 
-    // 1. Reset Button Visibility
     if (clearFiltersBtn) {
         if (query !== "" || filterValue !== "all") {
             clearFiltersBtn.classList.add('is-active');
@@ -93,7 +91,6 @@ function updateInterfaceState() {
         }
     }
 
-    // 2. Share FAB Visibility
     if (shareCategoryBtn) {
         if (filterValue === 'all') {
             shareCategoryBtn.classList.remove('visible');
@@ -106,7 +103,7 @@ function updateInterfaceState() {
 }
 
 /**
- * FEATURE: Filter by Skill (Clickable Badges)
+ * FEATURE: Filter by Skill
  */
 window.filterBySkill = (skillName) => {
     closeDrawer();
@@ -161,7 +158,8 @@ function showSuggestions(query) {
     experiences.forEach(exp => {
         const expStr = exp.toString();
         if (expStr.includes(lowerQuery) || ("years".includes(lowerQuery) && lowerQuery.length > 2)) {
-            matches.push({ label: `${exp}+ Years Exp`, type: 'Experience', value: expStr });
+            const labelText = exp === 0 ? "Entry Level / None" : `${exp}+ Years Exp`;
+            matches.push({ label: labelText, type: 'Experience', value: expStr });
         }
     });
 
@@ -343,6 +341,9 @@ function openQuickView(person) {
         </div>
     ` : '';
 
+    // Handle Experience Text for 0 cases
+    const expText = person.experience === 0 ? 'None' : `${person.experience || '1'}+ Years`;
+
     drawerBody.innerHTML = `
         <div class="drawer-header">
             <img src="${person.image}" alt="${person.name}" class="drawer-img">
@@ -352,7 +353,7 @@ function openQuickView(person) {
             </h2>
             <div class="drawer-stats" style="display: flex; justify-content: center; gap: 24px; margin: 1rem 0; padding: 1rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
                 <div class="stat-item" style="text-align: center;"><span style="display: block; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Location</span><b>${person.location || 'Remote'}</b></div>
-                <div class="stat-item" style="text-align: center;"><span style="display: block; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Experience</span><b>${person.experience || '1'}+ Years</b></div>
+                <div class="stat-item" style="text-align: center;"><span style="display: block; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Experience</span><b>${expText}</b></div>
             </div>
             <div class="badge-container" style="justify-content: center; mask-image: none; -webkit-mask-image: none; overflow: visible; flex-wrap: wrap; margin-top: 1rem;">
                 ${person.skills.map(s => `<button class="badge" style="${getSkillStyle(s)}; cursor: pointer; border: none; font-family: inherit;" onclick="window.filterBySkill('${s}')">${s}</button>`).join('')}
@@ -508,7 +509,6 @@ filterBtns.forEach(btn => {
         const filter = btn.dataset.filter;
         const url = new URL(window.location);
         
-        // Update URL and History
         if (filter === 'all') {
             url.searchParams.delete('filter');
         } else {
@@ -516,15 +516,11 @@ filterBtns.forEach(btn => {
         }
         window.history.replaceState({}, '', url);
 
-        // Update Active Button State
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        // Refresh Gallery and UI Components only
         filterGallery(); 
         updateInterfaceState();
-
-        // Note: renderSpotlightPill is NOT called here to keep the daily person locked.
     });
 });
 
@@ -536,7 +532,6 @@ shareCategoryBtn?.addEventListener('click', () => {
 
     navigator.clipboard.writeText(shareUrl).then(() => {
         const span = shareCategoryBtn.querySelector('span');
-        const originalText = span.innerText;
         shareCategoryBtn.classList.add('copied');
         span.innerText = "Link Copied!";
         setTimeout(() => {
@@ -583,37 +578,30 @@ function animateValue(obj, start, end, duration) {
 }
 
 function initializeGallery() {
-    // 1. IMMEDIATE: Show the UI shell so the page doesn't look empty
     showSkeletons();
     renderSpotlightPill(); 
 
-    // 2. DEFERRED: Handle heavy data processing and animations after a short delay
     setTimeout(() => {
-        // Prepare the master list (Pros first, then Regulars)
         const activePros = shuffle([...creatives.filter(c => isUserPro(c))]);
         const regulars = shuffle([...creatives.filter(c => !isUserPro(c))]);
         displayedCreatives = [...activePros, ...regulars];
 
-        // Calculate stats for the counter animations
         const allSkills = displayedCreatives.flatMap(p => p.skills);
         const uniqueSpecialties = [...new Set(allSkills.map(s => s.toLowerCase()))].length;
         
         const totalCountEl = document.getElementById('totalCount');
         const specialtyCountEl = document.getElementById('specialtyCount');
 
-        // Trigger numerical animations
         if (totalCountEl) animateValue(totalCountEl, 0, displayedCreatives.length, 1200);
         if (specialtyCountEl) {
             setTimeout(() => animateValue(specialtyCountEl, 0, uniqueSpecialties, 1000), 200);
         }
 
-        // Final UI assembly
         renderCards(displayedCreatives);
         checkDeepLink();
         updateFilterCounts();
         updateInterfaceState();
         
-        // Initialize Observers
         initStickyObserver();
         initFooterObserver();
         initScrollReveal(); 
@@ -692,44 +680,27 @@ window.addEventListener('click', (event) => {
     if (event.target === aboutModal) closeAbout();
 });
 
-/**
- * FEATURE: Balanced Merit-Based Global Spotlight
- * Features one member per day site-wide based on Experience, Pro status, and Profile Quality.
- * Locked to a 24-hour cycle regardless of filtering.
- */
 function renderSpotlightPill() {
     const container = document.getElementById('spotlightContainer');
     if (!container || !creatives.length) return;
 
-    // 1. Calculate Merit Scores (Global weighting, no filter bias)
     const scoredPool = creatives.map((person, index) => {
-        let score = 10; // Base tickets for everyone
-
-        // MERIT: Experience is high priority (e.g., 10 years = 40 points)
+        let score = 10; 
         if (person.experience) {
             score += Math.floor(person.experience * 4); 
         }
-
-        // STATUS: Pro members get a nudge
         if (isUserPro(person)) {
             score += 20; 
         }
-
-        // QUALITY: Reward profiles with more projects
         if (person.featuredWork && person.featuredWork.length > 0) {
             score += (person.featuredWork.length * 2);
         }
-
         return { index, score, person };
     });
 
     const totalScore = scoredPool.reduce((sum, item) => sum + item.score, 0);
-
-    // 2. Global 24-Hour Seed (Strictly date-based)
     const today = new Date();
     const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-
-    // 3. Deterministic Selection (LCG Algorithm)
     const lcg = (seed) => (seed * 16807) % 2147483647;
     let selectionValue = lcg(dateSeed) % totalScore;
     
@@ -742,7 +713,6 @@ function renderSpotlightPill() {
         selectionValue -= item.score;
     }
 
-    // 4. Label Logic (Based on the winner's specific highlights)
     let label = "Daily Spotlight";
     let isDiscovery = false;
 
@@ -753,7 +723,9 @@ function renderSpotlightPill() {
         label = "Verified Creator";
     }
 
-    // 5. Render
+    // Correct experience display for spotlight
+    const spotExp = winner.experience === 0 ? 'No Exp' : `${winner.experience || 1}y+ Exp`;
+
     container.innerHTML = `
         <div class="spotlight-pill" onclick="window.openQuickViewByName('${winner.name}')">
             <img src="${winner.image}" alt="${winner.name}" loading="lazy">
@@ -761,19 +733,14 @@ function renderSpotlightPill() {
             <span class="spotlight-name">${winner.name}</span>
             <div class="spotlight-meta">
                 <span class="spotlight-role">${winner.skills[0]}</span>
-                <span class="spotlight-exp">${winner.experience || 1}y+ Exp</span>
+                <span class="spotlight-exp">${spotExp}</span>
                 <span class="spotlight-arrow">→</span>
             </div>
         </div>
     `;
 }
 
-/**
- * HELPER: Open QuickView by Name
- */
 window.openQuickViewByName = (name) => {
     const person = creatives.find(p => p.name === name);
-    if (person) {
-        openQuickView(person);
-    }
+    if (person) openQuickView(person);
 };
