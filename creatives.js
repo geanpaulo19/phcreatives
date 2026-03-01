@@ -5,8 +5,8 @@ export const creatives = [
         skills: ["Frontend", "UI/UX Design", "Brand & Identity", "Graphic Design"],
         location: "Cainta, PH",
         experience: 5,
-        bio: "Crafting high-performance web experiences through a blend of strategic design...",
-        longBio: "With over 5 years of experience in the Philippine tech scene, I specialize in building bridges between complex backend logic and intuitive user interfaces. I've helped startups scale from zero to one by focusing on clean code and pixel-perfect design systems.",
+        bio: "Strategic designer and developer crafting high-performance, pixel-perfect web experiences.",
+        longBio: "With 5+ years in the Philippine tech scene, I specialize in bridging complex backend logic with intuitive interfaces, helping startups scale through clean code and robust design systems.",
         image: "images/gean.jpg",
         featuredWork: [
             { title: "Portfolio 2026", url: "https://geanpaulo.com/" },
@@ -27,7 +27,7 @@ export const creatives = [
         skills: ["Motion Graphics", "Graphic Design"],
         location: "Tuguegarao, PH",
         experience: 5,
-        bio: "Creative strategist transforming brand visions into high-impact graphic identities and cinematic video content.",
+        bio: "Creative strategist transforming brand visions into cinematic video content and high-impact graphic identities.",
         image: "images/julius.jpg",
         links: { facebook: "https://www.facebook.com/julius.blanza.natividad" }
     },
@@ -37,7 +37,7 @@ export const creatives = [
         skills: ["Brand & Identity", "Graphic Design", "Motion Graphics"],
         location: "Davao, PH",
         experience: 7,
-        bio: "Crafting bold visuals and engaging videos that elevate brands.",
+        bio: "Specializing in bold visual storytelling and engaging motion graphics that elevate modern brands.",
         image: "images/nicko.png",
         links: { portfolio: "https://franckolamanilao.my.canva.site/nicko-lamanilao-portfolio", facebook: "https://www.facebook.com/francko2021", instagram: "https://instagram.com/francko101", linkedin: "https://www.linkedin.com/in/frances-nicko-lamanilao-216ba1285" }
     },
@@ -47,7 +47,7 @@ export const creatives = [
         skills: ["Brand & Identity", "Graphic Design", "Frontend"],
         location: "Remote",
         experience: 3,
-        bio: "Freelance Graphic Designer helping NGOs and start-ups expand their audience reach.",
+        bio: "Graphic designer helping NGOs and startups expand their reach through strategic visual identity.",
         image: "images/dana.png",
         featuredWork: [
             { title: "Evergreen Labs Inc. | Visual Design", url: "https://www.behance.net/gallery/206121353/Evergreen-Labs-Inc-Visual-Design" },
@@ -64,7 +64,7 @@ export const creatives = [
         skills: ["Brand & Identity", "Graphic Design", "Frontend"],
         location: "Puerto Princesa, PH",
         experience: 5,
-        bio: "Owner of JEVM Graphics Design, transforming brand ideas into clean, high-impact visual designs.",
+        bio: "Founder of JEVM Graphics Design, transforming brand concepts into clean, high-impact visual solutions.",
         image: "images/jeffrey.png",
         links: { portfolio: "https://jeffreycelestino.carrd.co", facebook: "https://www.facebook.com/jeffrey.celestino.55/", linkedin: "https://www.linkedin.com/in/jeffrey-celestino/", behance: "https://www.behance.net/jevmgraphicsdesign" }
     },
@@ -74,7 +74,7 @@ export const creatives = [
         skills: ["Brand & Identity", "Graphic Design", "Motion Graphics"],
         location: "Marikina, PH",
         experience: 6,
-        bio: "Freelance Designer partnering with startups and established brands, both local and international.",
+        bio: "Versatile designer partnering with global startups to deliver premium branding and motion content.",
         image: "images/lloyd.png",
         links: { facebook: "https://www.facebook.com/dyolldesigns", instagram: "https://www.instagram.com/dyoll_designs", behance: "https://www.behance.net/dyolldesigns" }
     },
@@ -84,7 +84,7 @@ export const creatives = [
         skills: ["Brand & Identity", "Graphic Design"],
         location: "Pasay, PH",
         experience: 3,
-        bio: "Freelance Graphic Designer crafting high-impact visual identities and modern brand stories.",
+        bio: "Graphic designer focused on modern brand storytelling and the creation of high-impact visual identities.",
         image: "images/jessie.png",
         links: { facebook: "https://www.facebook.com/share/1BBPu6hVPo/?mibextid=wwXIfr", behance: "https://www.behance.net/jessiebedia", linkedin: "https://www.linkedin.com/in/jjkultur" }
     },
@@ -94,7 +94,7 @@ export const creatives = [
         skills: ["Brand & Identity", "Graphic Design", "UI/UX Design", "Motion Graphics"],
         location: "Batangas, PH",
         experience: 7,
-        bio: "Crafting Logos, Brewing Ideas, and an Annoying Perfectionist.",
+        bio: "A branding specialist and perfectionist dedicated to brewing unique ideas and pixel-perfect design.",
         image: "images/ceriaca.png",
         featuredWork: [
             { title: "Print Designs", url: "https://tinyurl.com/graphicnprintdesign" },
@@ -112,7 +112,7 @@ export const creatives = [
         skills: ["Graphic Design", "Motion Graphics"],
         location: "Remote",
         experience: 3,
-        bio: "Transforming ideas into visuals through design and photo editing, while constantly pushing the boundaries of my craft.",
+        bio: "Visual artist specializing in creative design and photo editing to push the boundaries of digital craft.",
         image: "images/pinote.png",
         links: { facebook: "https://www.facebook.com/ashlleysundang/", instagram: "https://www.instagram.com/ashlleysundang/", linkedin: "https://www.linkedin.com/in/ashlley-marie-pinote/" }
     },
@@ -122,7 +122,7 @@ export const creatives = [
         skills: ["Graphic Design", "Brand & Identity"],
         location: "Remote",
         experience: 2,
-        bio: "Freelance designer bridging the gap between dynamic eSports visuals and refined editorial layouts.",
+        bio: "Designer bridging the gap between dynamic eSports visuals and refined editorial layouts.",
         image: "images/aubrey.png",
         links: { portfolio: "https://portfoliobybry.carrd.co", facebook: "https://www.facebook.com/bry.bry1110", instagram: "https://www.instagram.com/bry.bybry?igsh=MXFtbW9haHlucnNsMg%3D%3D&utm_source=qr", X: "https://x.com/intowinteo?s=21" }
     },
@@ -132,7 +132,7 @@ export const creatives = [
         skills: ["Graphic Design", "Brand & Identity"],
         location: "Manila, PH",
         experience: 5,
-        bio: "Elevating small brands one logo at a time.",
+        bio: "Strategic brand designer committed to elevating small businesses through meaningful logo and identity work.",
         image: "images/ginno.png",
         links: { facebook: "https://www.facebook.com/gnomedesign" }
     },
@@ -142,7 +142,7 @@ export const creatives = [
         skills: ["Graphic Design", "Brand & Identity", "Motion Graphics", "Frontend"],
         location: "Remote",
         experience: 1,
-        bio: "Freelance designer and editor delivering high-impact branding and video for global brands. Creative speed meets obsessive detail.",
+        bio: "Delivering high-impact branding and video for global brands where creative speed meets obsessive detail.",
         image: "images/erianne.png",
         featuredWork: [
             { title: "PFL Social Media Graphic", url: "https://www.instagram.com/p/DP8BxFrDrhE/?igsh=OHA4aTZ6MzRkbXNt" },
@@ -157,7 +157,7 @@ export const creatives = [
         skills: ["Graphic Design"],
         location: "Metro Manila, PH",
         experience: 9,
-        bio: "Helping brands stand out with high-impact visuals and bespoke illustration.",
+        bio: "Helping brands dominate their space with high-impact visuals and bespoke, professional illustration.",
         image: "images/joshua.png",
         featuredWork: [
             { title: "Death Metal Illustration", url: "https://www.behance.net/rakebrutalarts" }
@@ -170,7 +170,7 @@ export const creatives = [
         skills: ["Graphic Design", "Brand & Identity"],
         location: "Laguna, PH",
         experience: 8,
-        bio: "A graphic designer and illustrator with 8+ years of experience in brand development and digital artwork. Specializes in custom illustrations, apparel design, and logo creation.",
+        bio: "Experienced designer specializing in brand development, digital artwork, apparel, and custom logo creation.",
         image: "images/janmichael.png",
         featuredWork: [
             { title: "2025 Brand Identity Projects", url: "https://www.behance.net/gallery/232639143/2025-Logo-and-Brand-Design-Projects" },
@@ -184,7 +184,7 @@ export const creatives = [
         skills: ["Graphic Design"],
         location: "Cebu, PH",
         experience: 0,
-        bio: "Dedicated to bringing your vision to life, I am an entry-level graphic designer offering tailored designs and unlimited revisions to ensure your complete satisfaction.",
+        bio: "Dedicated entry-level designer offering tailored visuals and unlimited revisions to ensure complete satisfaction.",
         image: "images/rubina.png",
         links: { portfolio: "https://www.canva.com/design/DAGe-CgK7Mw/uOgCbNqdU-RjMVNDQuJggg/view?utm_content=DAGe-CgK7Mw&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h7f03e3b30a", facebook: "https://www.facebook.com/HajimeKirisho", x: "https://x.com/OtakuJamz" }
     }
