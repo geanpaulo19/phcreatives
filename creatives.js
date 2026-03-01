@@ -177,5 +177,15 @@ export const creatives = [
             { title: "Busy Bees Merch Design", url: "https://www.behance.net/gallery/204393251/Shirt-Design-for-Busy-Bees-Apparel" }
         ],
         links: { portfolio: "https://www.behance.net/SeventhSektor", facebook: "https://www.facebook.com/ItsMykeElep/", instagram: "https://www.instagram.com/seventhsektor/" }
+    },
+    {
+        name: "James Rubina",
+        email: "rubinabjames@gmail.com",
+        skills: ["Graphic Design"],
+        location: "Cebu, PH",
+        experience: 0,
+        bio: "Dedicated to bringing your vision to life, I am an entry-level graphic designer offering tailored designs and unlimited revisions to ensure your complete satisfaction.",
+        image: "images/rubina.png",
+        links: { portfolio: "https://www.canva.com/design/DAGe-CgK7Mw/uOgCbNqdU-RjMVNDQuJggg/view?utm_content=DAGe-CgK7Mw&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h7f03e3b30a", facebook: "https://www.facebook.com/HajimeKirisho", x: "https://x.com/OtakuJamz" }
     }
 ];
