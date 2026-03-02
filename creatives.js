@@ -187,5 +187,20 @@ export const creatives = [
         bio: "Dedicated entry-level designer offering tailored visuals and unlimited revisions to ensure complete satisfaction.",
         image: "images/rubina.png",
         links: { portfolio: "https://www.canva.com/design/DAGe-CgK7Mw/uOgCbNqdU-RjMVNDQuJggg/view?utm_content=DAGe-CgK7Mw&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h7f03e3b30a", facebook: "https://www.facebook.com/HajimeKirisho", x: "https://x.com/OtakuJamz" }
+    },
+    {
+        name: "Joshua Cortes",
+        email: "joxdexigns@gmail.com",
+        skills: ["Graphic Design", "Brand & Identity", "Motion Graphics"],
+        location: "Remote",
+        experience: 8,
+        bio: "Turning raw ideas into wearable art, flawless mockups, sharp visuals, and scroll-stopping edits.",
+        image: "images/sotoniel.png",
+        featuredWork: [
+            { title: "Illustration (T-Shirt Designs)", url: "https://www.behance.net/gallery/232215095/ILLUSTRATION-T-Shirt-Design" },
+            { title: "Product & Model Retouch", url: "https://www.behance.net/gallery/239107115/High-End-Jewelry-Product-Model-Photo-Retouching" },
+            { title: "Video Editing", url: "https://www.behance.net/gallery/91695461/Video-Editing" },
+        ],
+        links: { portfolio: "https://www.behance.net/joxdexigns", facebook: "https://www.facebook.com/jxxxxxxxy/", instagram: "https://www.instagram.com/joxdexigns/" }
     }
 ];
