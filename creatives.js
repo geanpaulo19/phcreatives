@@ -202,5 +202,18 @@ export const creatives = [
             { title: "Video Editing", url: "https://www.behance.net/gallery/91695461/Video-Editing" },
         ],
         links: { portfolio: "https://www.behance.net/joxdexigns", facebook: "https://www.facebook.com/jxxxxxxxy/", instagram: "https://www.instagram.com/joxdexigns/" }
+    },
+    {
+        name: "Kenzo Kobayashi",
+        email: "kenzo@branebox.com",
+        skills: ["Frontend", "UI/UX Design", "Brand & Identity"],
+        location: "Remote",
+        experience: 15,
+        bio: "Web designer helping businesses launch sites that convert visitors into clients.",
+        image: "images/kenzo.png",
+        featuredWork: [
+            { title: "GDV Holdings", url: "https://gdvholdings.com" }
+        ],
+        links: { website: "https://branebox.com" }
     }
 ];
