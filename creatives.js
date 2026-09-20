@@ -224,7 +224,7 @@ export const creatives = [
         location: "Manila",
         experience: 3,
         bio: "I play with ideas, colors, and concepts to craft visuals that feel bold, thoughtful, and a little unexpected.",
-        image: "images/patricia.png",
+        image: "images/patricia.webp",
         links: { portfolio: "https://www.behance.net/gallery/242971169/PORTFOLIO-2025", facebook: "https://www.facebook.com/abcdemilia/", instagram: "https://www.instagram.com/abcd_milia/", linkedin: "https://www.linkedin.com/in/patricia-emil-andrea-mariano-031a55353/" },
         expiryDate: "2027-09-30"
     }
