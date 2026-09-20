@@ -214,6 +214,7 @@ export const creatives = [
         featuredWork: [
             { title: "GDV Holdings", url: "https://gdvholdings.com" }
         ],
-        links: { website: "https://branebox.com" }
+        links: { website: "https://branebox.com" },
+        expiryDate: "2027-09-30" 
     }
 ];
