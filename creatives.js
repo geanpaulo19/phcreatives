@@ -216,5 +216,16 @@ export const creatives = [
         ],
         links: { website: "https://branebox.com" },
         expiryDate: "2027-09-30" 
+    },
+    {
+        name: "Patricia Emil Andrea",
+        email: "triciamariano3@gmail.com",
+        skills: ["Photography", "Motion Graphics", "Graphic Design"],
+        location: "Manila",
+        experience: 3,
+        bio: "I play with ideas, colors, and concepts to craft visuals that feel bold, thoughtful, and a little unexpected.",
+        image: "images/patricia.png",
+        links: { portfolio: "https://www.behance.net/gallery/242971169/PORTFOLIO-2025", facebook: "https://www.facebook.com/abcdemilia/", instagram: "https://www.instagram.com/abcd_milia/", linkedin: "https://www.linkedin.com/in/patricia-emil-andrea-mariano-031a55353/" },
+        expiryDate: "2027-09-30"
     }
 ];
